@@ -63,7 +63,7 @@ svg{display:block}
 .hl i{position:absolute;border-radius:3px}
 .textLayer{position:absolute;inset:0;overflow:hidden;line-height:1;color:transparent}
 .textLayer span,.textLayer br{position:absolute;white-space:pre;cursor:text;transform-origin:0 0}
-.textLayer ::selection{background:rgba(58,75,216,.28)}
+.textLayer ::selection{background:color-mix(in srgb,var(--acc) 28%,transparent)}
 /* selection toolbar */
 #sel{position:fixed;display:none;z-index:40;align-items:center;gap:6px;padding:7px 10px;background:#161a28;color:#fff;border-radius:12px;box-shadow:var(--sh)}
 #sel span{font-size:12px;opacity:.7;margin-right:2px}
@@ -175,7 +175,7 @@ html[data-dev=tv] #empty h2{font-size:42px}
 html[data-theme=dark]:not([data-pg=light]) .page,html[data-theme=dark]:not([data-pg=light]) .pp{background:#1a1a1a}
 html[data-theme=dark]:not([data-pg=light]) .page canvas,html[data-theme=dark]:not([data-pg=light]) .pp canvas{filter:invert(.9) hue-rotate(180deg)}
 html[data-theme=dark]:not([data-pg=light]) .hl{mix-blend-mode:normal;opacity:.42}
-html[data-theme=dark] .textLayer ::selection{background:rgba(143,155,255,.45)}
+html[data-theme=dark] .textLayer ::selection{background:color-mix(in srgb,var(--acc) 45%,transparent)}
 /* ---- per-PDF note colours ---- */
 #sel{flex-wrap:wrap;max-width:min(94vw,470px)}
 #sel button.ch{width:auto;height:30px;border-radius:15px;padding:0 11px 0 7px;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:0;box-shadow:none;color:#fff;font-size:12.5px;font-weight:600}
@@ -294,7 +294,7 @@ button:not(:disabled):not(.tg):not(.pd):active{transform:scale(.95)}
 /* empty state */
 #empty{animation:rise .6s var(--ease) both}
 #empty .elogo{animation:floaty 5.5s ease-in-out infinite}
-#empty button{transition:transform .15s var(--ease),filter .15s,box-shadow .2s}#empty button:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(58,75,216,.35)}
+#empty button{transition:transform .15s var(--ease),filter .15s,box-shadow .2s}#empty button:hover{transform:translateY(-2px);box-shadow:0 8px 22px color-mix(in srgb,var(--acc) 35%,transparent)}
 /* pages: shimmer while loading, fade in on open / switch */
 .page.near:not(.rd){background:linear-gradient(100deg,#fff 38%,#eceffa 50%,#fff 62%) 0 0/250% 100%;animation:shim 1.5s linear infinite}
 html[data-theme=dark]:not([data-pg=light]) .page.near:not(.rd){background:linear-gradient(100deg,#1a1a1a 38%,#272727 50%,#1a1a1a 62%) 0 0/250% 100%}
@@ -302,7 +302,7 @@ html[data-theme=dark]:not([data-pg=light]) .page.near:not(.rd){background:linear
 #pages.swap .page canvas{animation:fadeIn .45s ease both}
 #pages.swap .nb{animation:nbIn .5s var(--ease) both}
 .hl i.in{animation:hlin .5s var(--ease) both}
-.nb{transition:box-shadow .25s}.nb:focus-within{box-shadow:0 1px 3px rgba(0,0,0,.2),0 16px 48px rgba(58,75,216,.28)}
+.nb{transition:box-shadow .25s}.nb:focus-within{box-shadow:0 1px 3px rgba(0,0,0,.2),0 16px 48px color-mix(in srgb,var(--acc) 28%,transparent)}
 /* pop-ups, toolbars, dialogs, toasts */
 #note{transform-origin:top left;animation-duration:.24s;animation-timing-function:var(--ease)}
 #sel{animation:pop2 .18s var(--ease)}
@@ -366,13 +366,21 @@ html.tx *,html.tx *:before,html.tx *:after{transition:background-color .35s ease
 body.nobk #rpanel .rg:not(.keep){opacity:.4;pointer-events:none}
 @media(max-width:900px){#tbar{display:flex;gap:6px}#tbar .l{flex:none}#title{display:none}#rtabs{flex:1;justify-content:center}#rtabs button{padding:0 9px!important}#tbar .r{flex:none}}
 @media(max-width:700px){#bexport .et{display:none}#rpanel .rp{min-height:78px}#rpanel .rpin span{display:none}#tbar{flex-wrap:wrap;row-gap:2px;min-height:0}#tbar .l{flex:1 1 0}#tbar .r{flex:none;min-width:0}#rtabs{order:3;flex:1 0 100%;justify-content:center}}
+/* the highlight bar uses theme colours, so the gear must too (it was fixed white and vanished on the light bar) */
+#sel button.cfg{color:var(--ink)!important;opacity:.9}
+#sel button.cfg:hover{background:var(--hover)!important;opacity:1}
+#sel button.cfg svg{stroke-width:2}
+/* accent colour everywhere: form controls, text selection and glows all follow --acc */
+:root{accent-color:var(--acc)}
+::selection{background:color-mix(in srgb,var(--acc) 30%,transparent)}
+html[data-theme=dark] ::selection{background:color-mix(in srgb,var(--acc) 45%,transparent)}
 </style>
 </head>
 <body>
 <div id="app" class="open">
   <div id="scrim"></div>
   <aside id="drawer"><div id="dIn">
-    <div id="brand"><svg id="logo" viewBox="0 0 48 48" width="34" height="34"><rect width="48" height="48" rx="12" fill="#3a4bd8"/><path d="M14 9h14l8 8v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff"/><path d="M28 9l8 8h-6a2 2 0 0 1-2-2z" fill="#3a4bd8" fill-opacity=".3"/><rect x="17" y="21" width="12" height="2.6" rx="1.3" fill="#3a4bd8" fill-opacity=".45"/><rect x="15.5" y="26" width="19" height="6.4" rx="2.2" fill="#3a4bd8" fill-opacity=".22"/><rect x="17.5" y="27.9" width="14" height="2.6" rx="1.3" fill="#3a4bd8"/><rect x="17" y="35.5" width="9" height="2.6" rx="1.3" fill="#3a4bd8" fill-opacity=".45"/></svg><span>Marginalia</span></div>
+    <div id="brand"><svg id="logo" viewBox="0 0 48 48" width="34" height="34"><rect width="48" height="48" rx="12" style="fill:var(--logo,#3a4bd8)"/><path d="M14 9h14l8 8v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff"/><path d="M28 9l8 8h-6a2 2 0 0 1-2-2z" style="fill:var(--logo,#3a4bd8)" fill-opacity=".3"/><rect x="17" y="21" width="12" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)" fill-opacity=".45"/><rect x="15.5" y="26" width="19" height="6.4" rx="2.2" style="fill:var(--logo,#3a4bd8)" fill-opacity=".22"/><rect x="17.5" y="27.9" width="14" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)"/><rect x="17" y="35.5" width="9" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)" fill-opacity=".45"/></svg><span>Marginalia</span></div>
     <div id="tabs"><button class="on" data-t="toc">Contents</button></div>
     <div class="pane on" id="toc"><p class="hint">Open a book to see its contents.</p></div>
     <div id="nlhold" hidden><div class="pane on" id="nl"><p class="hint">No notes yet.</p></div></div>
@@ -419,7 +427,7 @@ body.nobk #rpanel .rg:not(.keep){opacity:.4;pointer-events:none}
       <button data-c="removeFormat" title="Clear formatting">Clear</button>
     </div>
     <div id="viewer" tabindex="0"><div id="stage">
-      <div id="empty"><svg class="elogo" viewBox="0 0 48 48" width="56" height="56"><rect width="48" height="48" rx="12" fill="#3a4bd8"/><path d="M14 9h14l8 8v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff"/><path d="M28 9l8 8h-6a2 2 0 0 1-2-2z" fill="#3a4bd8" fill-opacity=".3"/><rect x="17" y="21" width="12" height="2.6" rx="1.3" fill="#3a4bd8" fill-opacity=".45"/><rect x="15.5" y="26" width="19" height="6.4" rx="2.2" fill="#3a4bd8" fill-opacity=".22"/><rect x="17.5" y="27.9" width="14" height="2.6" rx="1.3" fill="#3a4bd8"/><rect x="17" y="35.5" width="9" height="2.6" rx="1.3" fill="#3a4bd8" fill-opacity=".45"/></svg><h2>Read it. Mark it. Keep it in one book.</h2><p>Your highlights, notes and notebooks are saved together with the PDF in a single .mar book, so you can share just one file.</p><button id="open2" title="You can open either a PDF file or a Marginalia book (.mar) file">Open a book</button></div>
+      <div id="empty"><svg class="elogo" viewBox="0 0 48 48" width="56" height="56"><rect width="48" height="48" rx="12" style="fill:var(--logo,#3a4bd8)"/><path d="M14 9h14l8 8v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff"/><path d="M28 9l8 8h-6a2 2 0 0 1-2-2z" style="fill:var(--logo,#3a4bd8)" fill-opacity=".3"/><rect x="17" y="21" width="12" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)" fill-opacity=".45"/><rect x="15.5" y="26" width="19" height="6.4" rx="2.2" style="fill:var(--logo,#3a4bd8)" fill-opacity=".22"/><rect x="17.5" y="27.9" width="14" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)"/><rect x="17" y="35.5" width="9" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)" fill-opacity=".45"/></svg><h2>Read it. Mark it. Keep it in one book.</h2><p>Your highlights, notes and notebooks are saved together with the PDF in a single .mar book, so you can share just one file.</p><button id="open2" title="You can open either a PDF file or a Marginalia book (.mar) file">Open a book</button></div>
       <div id="pages"></div>
       <div id="note"></div>
     </div></div>
@@ -780,9 +788,22 @@ addEventListener("resize",onResize);addEventListener("orientationchange",onResiz
   g.onpointerdown=e=>{e.preventDefault();g.setPointerCapture(e.pointerId);const w0=pop.offsetWidth,h0=pop.offsetHeight,x0=e.clientX,y0=e.clientY;
     g.onpointermove=m=>{pop.style.width=Math.max(260,w0+m.clientX-x0)+"px";pop.style.height=Math.max(190,h0+m.clientY-y0)+"px"};g.onpointerup=()=>{g.onpointermove=null}}}}
 
-/* tab icon: PNG copy of the logo for browsers that ignore SVG favicons */
-(()=>{const im=new Image();im.onload=()=>{const c=document.createElement("canvas");c.width=c.height=64;c.getContext("2d").drawImage(im,0,0,64,64);const l=document.querySelector("link[rel=icon]");l.type="image/png";l.href=c.toDataURL("image/png");const a=document.createElement("canvas");a.width=a.height=180;a.getContext("2d").drawImage(im,0,0,180,180);const al=document.createElement("link");al.rel="apple-touch-icon";al.href=a.toDataURL("image/png");document.head.appendChild(al)};
-im.src="data:image/svg+xml,"+encodeURIComponent(document.querySelector("#brand svg").outerHTML.replace("<svg ",'<svg xmlns="http://www.w3.org/2000/svg" ').replace('width="34" height="34"','width="64" height="64"'))})();
+/* tab icon + home-screen icon: PNG copies of the logo, redrawn in the current logo colour (also when the accent colour changes) */
+window.nomIcons=(()=>{let t=0;
+  const svgStr=c=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64"><rect width="48" height="48" rx="12" fill="${c}"/><path d="M14 9h14l8 8v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff"/><path d="M28 9l8 8h-6a2 2 0 0 1-2-2z" fill="${c}" fill-opacity=".3"/><rect x="17" y="21" width="12" height="2.6" rx="1.3" fill="${c}" fill-opacity=".45"/><rect x="15.5" y="26" width="19" height="6.4" rx="2.2" fill="${c}" fill-opacity=".22"/><rect x="17.5" y="27.9" width="14" height="2.6" rx="1.3" fill="${c}"/><rect x="17" y="35.5" width="9" height="2.6" rx="1.3" fill="${c}" fill-opacity=".45"/></svg>`;
+  return c=>{clearTimeout(t);t=setTimeout(()=>{
+    const col=c||"#3a4bd8",im=new Image();
+    im.onload=()=>{
+      const k=document.createElement("canvas");k.width=k.height=64;k.getContext("2d").drawImage(im,0,0,64,64);
+      const l=document.querySelector("link[rel=icon]");if(l){l.type="image/png";l.href=k.toDataURL("image/png")}
+      const a=document.createElement("canvas");a.width=a.height=180;a.getContext("2d").drawImage(im,0,0,180,180);
+      let al=document.querySelector("link[rel=apple-touch-icon]");if(!al){al=document.createElement("link");al.rel="apple-touch-icon";document.head.appendChild(al)}
+      al.href=a.toDataURL("image/png");
+    };
+    im.src="data:image/svg+xml,"+encodeURIComponent(svgStr(col));
+  },c?150:0)}
+})();
+nomIcons(null);
 
 /* hover peek: scrollable preview of the page a contents entry points to */
 const peek=mk("div");peek.id="peek";document.body.appendChild(peek);
@@ -1587,7 +1608,7 @@ function nbxDoc(name,total,pages,sheet,fonts,z){   /* pages: [[pageNumber, html]
   const secs=pages.map(([p,h])=>`<section class="pg" id="p${p}"><div class="nbh"><b>Notebook</b><span>Page ${p} of ${total}</span></div><div class="c">${nbxClean(h)}</div></section>`).join("");
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; font-src data:"><title>${nbxEsc(name)} – notebook</title><style>
 ${fonts||""}
-:root{--z:${z||1.3};--desk:#e6e8ef;--paper:#fffdf7;--line:#dfe3f1;--ink:#1b1f33;--mute:#6a7088;--acc:#3a4bd8;--margin:#f1b9b9;--hole:#c6cbe0;--hand:"Patrick Hand","Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS",cursive;--ui:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif}
+:root{--z:${z||1.3};--desk:#e6e8ef;--paper:#fffdf7;--line:#dfe3f1;--ink:#1b1f33;--mute:#6a7088;--acc:${curAcc()};--margin:#f1b9b9;--hole:#c6cbe0;--hand:"Patrick Hand","Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS",cursive;--ui:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif}
 @media(prefers-color-scheme:dark){:root{--desk:#14161f;--paper:#1f2233;--line:#2d3250;--ink:#e8eaf6;--mute:#9aa0bd;--margin:#5b3142;--hole:#3a3f5f}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--desk);color:var(--ink);font:15px/1.5 var(--ui);padding:22px 14px 70px}
@@ -1657,7 +1678,8 @@ async function exportNotes(b,fid){
   const name=b.fname.replace(/\.(pdf|mar)$/i,"");
   const html=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; font-src data:"><title>Notes – ${esc(name)}</title><style>
 ${fonts}
-:root{--ink:#161a28;--mute:#6a7088;--bg:#fff;--line:#dcdfe9}
+:root{--ink:#161a28;--mute:#6a7088;--bg:#fff;--line:#dcdfe9;--acc:${curAcc()}}
+h1,a{color:var(--acc)}
 @media(prefers-color-scheme:dark){:root{--ink:#e8eaf6;--mute:#9aa0bd;--bg:#14161f;--line:#2d3250}}
 body{font:17px/1.55 "Newsreader",Georgia,serif;color:var(--ink);background:var(--bg);max-width:760px;margin:30px auto;padding:0 16px}
 h1,h2,.by{font-family:"Figtree","Segoe UI",system-ui,sans-serif}.by{font-size:14px;color:var(--mute)}.by b{color:var(--ink)}
@@ -2037,6 +2059,54 @@ const th=$$("#theme");if(th)th.before(b);
 const em=$$("#empty");if(em){const l=document.createElement("button");l.className="tourlink";l.textContent="Take the quick tour";l.onclick=start;em.append(l)}
 window.startTour=start;
 if(!seen())setTimeout(()=>{if(!seen())start()},900);
+})();
+
+function curAcc(){return(getComputedStyle(document.documentElement).getPropertyValue("--acc")||"#3a4bd8").trim()}
+/* ===== Accent colour (whole app + exports), theme-aware colour bar, and in-app Look up ===== */
+(()=>{
+const $$=q=>document.querySelector(q),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const st=document.createElement("style");st.textContent=`
+#sel{background:var(--panel)!important;color:var(--ink)!important;border:1px solid var(--line)}#sel button{border-color:var(--panel)!important;box-shadow:0 0 0 1px var(--line)!important}
+#sel button.ch{background:var(--hover)!important;color:var(--ink)!important}#sel button.ch:hover{background:var(--line)!important}
+.textLayer ::selection{background:color-mix(in srgb,var(--acc) 28%,transparent)}.nb:focus-within{box-shadow:0 1px 3px rgba(0,0,0,.2),0 16px 48px color-mix(in srgb,var(--acc) 28%,transparent)}
+#accpop,#lkp{position:fixed;z-index:70;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);font:14px/1.45 var(--ui);display:none}
+#accpop{padding:12px;width:216px}#accpop .sw{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}#accpop .sw button{width:28px;height:28px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line);cursor:pointer;padding:0}
+#accpop .sw button.on{box-shadow:0 0 0 2px var(--ink)}#accpop .row{display:flex;align-items:center;gap:8px;margin-top:6px}#accpop input[type=color]{width:34px;height:28px;border:0;background:none;padding:0}
+#accpop .rs{border:1px solid var(--line);background:none;color:var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer;font:600 12px var(--ui)}
+#lkp{width:min(360px,calc(100vw - 20px));max-height:min(70vh,520px);overflow:auto;padding:14px}#lkp h4{margin:0 0 6px;font:700 15px var(--ui);padding-right:24px}#lkp .x{position:absolute;right:8px;top:6px;border:0;background:none;color:var(--mute);font-size:18px;cursor:pointer}
+#lkp .s{margin:10px 0 0;padding-top:8px;border-top:1px solid var(--line)}#lkp small{color:var(--mute)}#lkp a{color:var(--acc)}#lkp .g{margin-top:12px;width:100%;padding:9px;border:0;border-radius:10px;background:var(--acc);color:var(--on);font:600 13px var(--ui);cursor:pointer}`;document.head.append(st);
+/* ---- accent colour ---- */
+const K="marginalia-accent",PRE=["#3a4bd8","#7c3aed","#db2777","#e11d48","#ea580c","#ca8a04","#16a34a","#0891b2","#475569"];
+const lum=h=>{const n=parseInt(h.slice(1),16),f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};return .2126*f(n>>16&255)+.7152*f(n>>8&255)+.0722*f(n&255)};
+function setAccent(c,save=true){const r=document.documentElement,m=document.querySelector('meta[name="theme-color"]');
+  if(!c){r.style.removeProperty("--acc");r.style.removeProperty("--on");r.style.removeProperty("--logo");if(m)m.content="#3a4bd8"}else{r.style.setProperty("--acc",c);r.style.setProperty("--on",lum(c)>.2?"#10122a":"#ffffff");r.style.setProperty("--logo",c);if(m)m.content=c}
+  if(window.nomIcons)nomIcons(c||null);
+  if(save)try{c?localStorage.setItem(K,c):localStorage.removeItem(K)}catch(e){}}
+try{const c=localStorage.getItem(K);if(c&&/^#[0-9a-f]{6}$/i.test(c))setAccent(c,false)}catch(e){}
+const ap=document.createElement("div");ap.id="accpop";document.body.append(ap);
+function drawAcc(){const cur=curAcc().toLowerCase();ap.innerHTML=`<b>Accent colour</b><div class="sw">${PRE.map(c=>`<button data-c="${c}" title="${c}" style="background:${c}" class="${c===cur?"on":""}"></button>`).join("")}</div><div class="row"><input type="color" value="${/^#[0-9a-f]{6}$/i.test(cur)?cur:"#3a4bd8"}" title="Pick any colour"><span>Custom</span><button class="rs" style="margin-left:auto">Reset</button></div>`;
+  ap.querySelectorAll(".sw button").forEach(b=>b.onclick=()=>{setAccent(b.dataset.c);drawAcc()});ap.querySelector("input").oninput=e=>{setAccent(e.target.value)};ap.querySelector(".rs").onclick=()=>{setAccent(null);drawAcc()}}
+const ab=document.createElement("button");ab.id="accbtn";ab.textContent="🎨";ab.title="Choose the accent colour";ab.setAttribute("aria-label","Accent colour");
+ab.onclick=()=>{if(ap.style.display==="block"){ap.style.display="none";return}drawAcc();const r=ab.getBoundingClientRect();ap.style.display="block";ap.style.top=r.bottom+8+"px";ap.style.left=Math.max(8,Math.min(r.left-170,innerWidth-ap.offsetWidth-8))+"px"};
+const th=$$("#tourbtn")||$$("#theme");if(th)th.before(ab);
+/* ---- Look up (in-app): dictionary + Wikipedia, with a Google button ---- */
+const lk=document.createElement("div");lk.id="lkp";document.body.append(lk);
+const closeLk=()=>{lk.style.display="none"};
+async function jget(u){const r=await fetch(u);if(!r.ok)throw 0;return r.json()}
+async function lookup(q,r){q=q.replace(/\s+/g," ").trim().slice(0,100);lk.innerHTML=`<button class="x" aria-label="Close">×</button><h4>${esc(q)}</h4><div class="b"><small>Looking up…</small></div><button class="g">Search Google ↗</button>`;
+  lk.style.display="block";lk.style.left=Math.max(8,Math.min(r.left,innerWidth-lk.offsetWidth-8))+"px";lk.style.top=Math.min(r.bottom+8,Math.max(8,innerHeight-lk.offsetHeight-8))+"px";
+  lk.querySelector(".x").onclick=closeLk;lk.querySelector(".g").onclick=()=>window.open("https://www.google.com/search?q="+encodeURIComponent(q),"_blank","noopener");
+  const B=lk.querySelector(".b");let html="";
+  if(/^[\p{L}'-]+$/u.test(q))try{const d=(await jget("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(q.toLowerCase())))[0];
+    html+=`<div><b>Dictionary</b> ${d.phonetic?`<small>${esc(d.phonetic)}</small>`:""}${d.meanings.slice(0,2).map(m=>`<div><i>${esc(m.partOfSpeech)}</i> ${esc(m.definitions[0].definition)}</div>`).join("")}</div>`}catch(e){}
+  try{const s=(await jget(`https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&srlimit=3&format=json&origin=*`)).query.search;
+    if(s.length){const t=s[0].title,m=await jget("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(t.replace(/ /g,"_")));
+      html+=`<div class="s"><b>Wikipedia: ${esc(t)}</b><div>${esc(m.extract||"")}</div><a href="https://en.wikipedia.org/wiki/${encodeURIComponent(t.replace(/ /g,"_"))}" target="_blank" rel="noopener">Read more</a>${s.slice(1).map(x=>`<div><small>Also: <a href="https://en.wikipedia.org/wiki/${encodeURIComponent(x.title.replace(/ /g,"_"))}" target="_blank" rel="noopener">${esc(x.title)}</a></small></div>`).join("")}</div>`}}catch(e){}
+  B.innerHTML=html||`<small>Nothing found here (or you are offline). Try Google below.</small>`}
+document.addEventListener("pointerdown",e=>{if(ap.style.display==="block"&&!ap.contains(e.target)&&e.target!==ab)ap.style.display="none";if(lk.style.display==="block"&&!lk.contains(e.target)&&!e.target.closest("#sel"))closeLk()},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){ap.style.display="none";closeLk()}});
+const _rs=renderSel;renderSel=function(){_rs();const sel=$$("#sel"),b=document.createElement("button");b.className="ch";b.title="Look up the selected text without leaving the app";b.innerHTML="🔍 Look up";
+  b.onclick=()=>{const q=(pending&&pending.text)||"";if(!q)return;const r=sel.getBoundingClientRect();sel.style.display="none";lookup(q,r)};sel.append(b)};
 })();
 </script>
 </body>
