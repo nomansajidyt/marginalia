@@ -135,7 +135,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-of
 @media(max-width:700px){
  #bar{display:flex;gap:4px;padding:6px 8px;overflow-x:auto;scrollbar-width:none}
  #bar .grp{flex:none}#bar .grp.r{margin-left:auto}
- #title,#zl,#boost,#pgmode,#bar .sep,#zin,#zout,#prev,#next,#closebk{display:none!important}
+ #bar .sep{display:none!important}
  #bar button.go{padding:0 12px}
  #btabs{padding:4px 8px 0}.bth{display:none}
  #empty{margin-top:8vh;padding:30px 22px}
@@ -329,6 +329,43 @@ html.tx *,html.tx *:before,html.tx *:after{transition:background-color .35s ease
 #viewer{overscroll-behavior:contain}
 /* respect the system "reduce motion" setting */
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+/* ---------- title bar + action panel ---------- */
+#bar{display:block!important;padding:0!important;min-width:0!important;max-width:100%;position:relative;z-index:45;overflow:visible;container-type:inline-size}
+#tbar{display:flex;align-items:center;gap:10px;min-height:54px;padding:7px max(14px,env(safe-area-inset-right)) 7px max(14px,env(safe-area-inset-left))}
+#tbar .l{display:flex;align-items:center;gap:8px;min-width:0;flex:1 1 0}
+#tbar .r{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex:1 1 0;min-width:max-content}
+#tlogo{display:none;width:30px;height:30px;flex:none;border-radius:8px;animation:logoIn .5s var(--ease) both}
+#app:not(.open) #tlogo{display:block}
+#title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;min-width:0}
+#bexport{background:var(--hover)!important;font-weight:600}#bexport .ei{font-size:16px}
+#rtabs{display:flex;gap:2px;flex:none;max-width:100%;overflow-x:auto;scrollbar-width:none}
+@container (max-width:1280px){#who span{display:none}}
+@container (max-width:1000px){#bexport .et{display:none}#rtabs button{padding:0 10px!important}}
+#rtabs button{height:34px!important;padding:0 14px!important;border:0!important;border-radius:9px!important;background:none!important;color:var(--mute)!important;font:600 13px var(--ui);position:relative;min-width:0}
+#rtabs button:hover{background:var(--hover)!important;color:var(--ink)!important}
+#rtabs button.on{color:var(--acc)!important}
+#rtabs button.on:after{content:"";position:absolute;left:12px;right:12px;bottom:2px;height:2px;border-radius:2px;background:var(--acc)}
+#rpanel{display:none;position:absolute;left:0;right:0;top:100%;background:var(--panel);border-bottom:1px solid var(--line);box-shadow:var(--sh);align-items:stretch;padding:4px 10px;transform-origin:top center}
+#rpanel.show{display:flex;animation:ribIn .26s var(--ease) both}
+#rpanel.hide{display:flex;animation:ribOut .16s ease-in both;pointer-events:none}
+#bar.pinned #rpanel{position:static;box-shadow:none}
+@keyframes ribIn{from{opacity:0;transform:translateY(-10px) scale(.992)}}
+@keyframes ribOut{to{opacity:0;transform:translateY(-8px) scale(.992)}}
+.rpbody{display:flex;flex:1;min-width:0;overflow-x:auto;scrollbar-width:thin}
+#rpanel .rp{display:none;align-items:stretch;padding:2px 0;min-height:82px}#rpanel .rp.on{display:flex}
+.rg{display:flex;flex-direction:column;padding:0 10px;border-right:1px solid var(--line);flex:none}.rg:last-child{border-right:0}
+.rb{display:flex;align-items:center;gap:2px;flex:1}.rn{text-align:center;font:11px var(--ui);color:var(--mute);padding-top:3px;white-space:nowrap}
+#rpanel button{flex-direction:column;height:56px!important;min-width:56px;gap:3px;padding:0 8px!important;font-size:16px;line-height:1}
+#rpanel button[data-lbl]::after{content:attr(data-lbl);font:600 11px var(--ui);white-space:nowrap}
+#rpanel .pgw{display:flex;align-items:center;gap:6px;padding:0 6px}#rpanel #zl{min-width:50px;text-align:center}
+#rpanel .sw{width:24px!important;min-width:24px!important;height:24px!important;border-radius:50%!important;border:2px solid var(--line)!important;padding:0!important;margin:0 2px}#rpanel .sw.sel{border-color:var(--ink)!important;transform:scale(1.15)}
+#rpanel .wb{height:34px!important;min-width:64px;font:600 12px var(--ui)}
+#rpanel #nbtgl .nbl{display:block!important;font:600 11px var(--ui)}
+#rpanel .rpin{flex-direction:row!important;align-self:flex-start;flex:none;height:30px!important;min-width:0!important;margin:6px 0 0 8px;padding:0 12px!important;gap:6px;border-radius:999px!important;border:1px solid var(--line)!important;background:none;color:var(--mute);font:600 12px var(--ui)!important;white-space:nowrap}
+#rpanel .rpin:hover{background:var(--hover)}#rpanel .rpin[aria-pressed=true]{background:var(--acc);color:var(--on);border-color:transparent!important}
+body.nobk #rpanel .rg:not(.keep){opacity:.4;pointer-events:none}
+@media(max-width:900px){#tbar{display:flex;gap:6px}#tbar .l{flex:none}#title{display:none}#rtabs{flex:1;justify-content:center}#rtabs button{padding:0 9px!important}#tbar .r{flex:none}}
+@media(max-width:700px){#bexport .et{display:none}#rpanel .rp{min-height:78px}#rpanel .rpin span{display:none}#tbar{flex-wrap:wrap;row-gap:2px;min-height:0}#tbar .l{flex:1 1 0}#tbar .r{flex:none;min-width:0}#rtabs{order:3;flex:1 0 100%;justify-content:center}}
 </style>
 </head>
 <body>
@@ -336,9 +373,9 @@ html.tx *,html.tx *:before,html.tx *:after{transition:background-color .35s ease
   <div id="scrim"></div>
   <aside id="drawer"><div id="dIn">
     <div id="brand"><svg id="logo" viewBox="0 0 48 48" width="34" height="34"><rect width="48" height="48" rx="12" fill="#3a4bd8"/><path d="M14 9h14l8 8v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff"/><path d="M28 9l8 8h-6a2 2 0 0 1-2-2z" fill="#3a4bd8" fill-opacity=".3"/><rect x="17" y="21" width="12" height="2.6" rx="1.3" fill="#3a4bd8" fill-opacity=".45"/><rect x="15.5" y="26" width="19" height="6.4" rx="2.2" fill="#3a4bd8" fill-opacity=".22"/><rect x="17.5" y="27.9" width="14" height="2.6" rx="1.3" fill="#3a4bd8"/><rect x="17" y="35.5" width="9" height="2.6" rx="1.3" fill="#3a4bd8" fill-opacity=".45"/></svg><span>Marginalia</span></div>
-    <div id="tabs"><button class="on" data-t="toc">Contents</button><button data-t="nl">Notes</button></div>
+    <div id="tabs"><button class="on" data-t="toc">Contents</button></div>
     <div class="pane on" id="toc"><p class="hint">Open a book to see its contents.</p></div>
-    <div class="pane" id="nl"><p class="hint">No notes yet.</p></div>
+    <div id="nlhold" hidden><div class="pane on" id="nl"><p class="hint">No notes yet.</p></div></div>
   </div></aside>
   <main id="center">
     <div id="bar">
@@ -578,7 +615,7 @@ async function nomOpen(f){
   if(f.size!==NOM_HDR+hd.pdfLen+hd.sideLen)throw new Error("the file is incomplete or damaged (wrong size)");
   const meta=await nomUnpack(new Uint8Array(await f.slice(NOM_HDR+hd.pdfLen).arrayBuffer()),hd.flag,hd.crc);
   const pdf=new Uint8Array(await f.slice(NOM_HDR,NOM_HDR+hd.pdfLen).arrayBuffer());
-  return{pdf,meta:{notes:meta.notes||[],palette:meta.palette||null,nb:meta.nb||{},bm:meta.bm||[],prog:meta.prog||null,hist:meta.hist||[],ink:meta.ink||null,pdfName:meta.pdfName||""},pdfLen:hd.pdfLen}}
+  return{pdf,meta:{notes:meta.notes||[],palette:meta.palette||null,nb:meta.nb||{},bm:meta.bm||[],prog:meta.prog||null,hist:meta.hist||[],ink:meta.ink||null,saved:meta.saved||"",pdfName:meta.pdfName||""},pdfLen:hd.pdfLen}}
 const nomIs=async f=>/\.mar$/i.test(f.name)||await(async()=>{try{const u=new Uint8Array(await f.slice(0,8).arrayBuffer());return NOM_MAGIC.every((v,i)=>u[i]===v)}catch(e){return false}})();
 /*NOM-END*/
 const NOM_MIME="application/x-marginalia-book";
@@ -646,7 +683,7 @@ async function addBook(doc,f,h,meta,extra){
   const nts=meta.notes,pal=meta.palette&&meta.palette.length?meta.palette:defPalette();
   nts.forEach(n=>{n.editing=false;if(!n.cid){const e=pal.find(x=>x.color.toLowerCase()===String(n.color||"").toLowerCase());if(e)n.cid=e.id}});
   const w1=(await doc.getPage(1)).getViewport({scale:1}).width;
-  const b={id:++bid,pdf:doc,bytes:null,handle:h,fname:f.name,scale:autoScale(w1),notes:nts,palette:pal,nb:meta.nb||{},bm:meta.bm||[],prog:meta.prog||null,hist:meta.hist||[],ink:meta.ink||null,base:JSON.stringify(coreOf({notes:nts,palette:pal,nb:meta.nb||{},bm:meta.bm||[]})),cur:1,dirty:false,scroll:0,snap:snapOf(nts,pal,meta.nb||{}),diskSize:f.size,perm:"prompt",...extra};
+  const b={id:++bid,pdf:doc,bytes:null,handle:h,fname:f.name,scale:autoScale(w1),notes:nts,palette:pal,nb:meta.nb||{},bm:meta.bm||[],prog:meta.prog||null,hist:meta.hist||[],ink:meta.ink||null,base:JSON.stringify(coreOf({notes:nts,palette:pal,nb:meta.nb||{},bm:meta.bm||[],ink:meta.ink||null})),baseT:Date.parse(meta.saved||"")||f.lastModified||Date.now(),cur:1,dirty:false,scroll:0,snap:snapOf(nts,pal,meta.nb||{}),diskSize:f.size,perm:"prompt",...extra};
   books.push(b);if(h)h.queryPermission({mode:"readwrite"}).then(r=>{b.perm=r;updateAuto()}).catch(()=>{});await activate(b);
   const what=b.nom?"the .mar file":"the PDF";
   toast(nts.length?`Loaded ${nts.length} note${nts.length>1?"s":""} from ${what}`:"No saved notes in "+what+" yet");
@@ -1210,7 +1247,7 @@ function pdfRuns(r){
 document.addEventListener("copy",e=>{
   const s=getSelection();if(!s||s.isCollapsed||!s.rangeCount||!e.clipboardData)return;
   const r=s.getRangeAt(0),a=r.commonAncestorContainer,el=a.nodeType===1?a:a.parentElement;
-  if(!el||el.closest("#note,#nl,#toc,#drawer"))return;
+  if(!el||el.closest("#note,#nl,#toc,#drawer,#tl"))return;
   if(!el.closest(".textLayer")&&!(el.querySelector&&el.querySelector(".textLayer")))return;
   const out=pdfToHtml(pdfRuns(r));if(!out)return;
   e.clipboardData.setData("text/html",out.html);e.clipboardData.setData("text/plain",out.text);e.preventDefault();
@@ -1384,9 +1421,10 @@ function refreshList(){
 /* Saving always writes a .mar book. The PDF part is taken from the source file as a lazy Blob, so a 500 MB book is never loaded into memory;
    the browser streams it into the new file together with the freshly built header and notes part. */
 const nomState=b=>({v:3,app:"Marginalia",saved:new Date().toISOString(),pdfName:(b.nom&&b.nom.pdfName)||b.fname,palette:b.palette,notes:b.notes.map(({editing,...n})=>n),nb:b.nb,bm:b.bm||[],prog:b.prog||null,hist:b.hist||[],ink:b.ink||null});
-const coreOf=b=>({palette:b.palette,notes:b.notes.map(({editing,...n})=>n),nb:b.nb,bm:b.bm||[]});
-/* version history: before each save to an existing .mar, the previously saved state is kept (last 3, skipped if very large) */
-function histPush(b){const c=JSON.stringify(coreOf(b));if(b.base&&b.base!==c&&b.base.length<2e6)b.hist=[{t:Date.now(),s:b.base},...(b.hist||[])].slice(0,3);b.base=c}
+const coreOf=b=>({palette:b.palette,notes:b.notes.map(({editing,...n})=>n),nb:b.nb,bm:b.bm||[],ink:b.ink||null});
+/* version history: every save keeps the previously saved COMPLETE state (notes, colours, notebook, bookmarks, drawings) with the time it was saved.
+   The last 3 travel inside the .mar file, so they show up on any computer and in any browser profile. No size limit. */
+function histPush(b){const c=JSON.stringify(coreOf(b));if(b.base&&b.base!==c)b.hist=[{t:b.baseT||Date.now(),s:b.base},...(b.hist||[])].slice(0,3);b.base=c;b.baseT=Date.now()}
 async function nomPdfPart(b){   /* the PDF inside this book's .mar file, as a Blob that is not read into memory */
   const src=b.handle?await b.handle.getFile():b.file;
   if(!src)throw new Error("the book's file is no longer available. Close it and open it again.");
@@ -1396,12 +1434,14 @@ async function nomPdfPart(b){   /* the PDF inside this book's .mar file, as a Bl
 }
 function nomDownload(blob,name){const a=mk("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),60000)}
 async function writeNom(b,auto){   /* existing .mar book: rebuild header + notes, copy the PDF part as it is */
-  histPush(b);
+  const prev={hist:b.hist,base:b.base,baseT:b.baseT};histPush(b);
+  try{
   const side=await nomPack(nomState(b)),pdfPart=await nomPdfPart(b);
   const blob=new Blob([nomHead(pdfPart.size,side),pdfPart,side.bytes],{type:NOM_MIME});
   if(b.handle){const w=await b.handle.createWritable();await w.write(blob);await w.close();b.perm="granted";toast((auto?"Autosaved ":"Saved to ")+b.fname);b.file=await b.handle.getFile()}
   else{nomDownload(blob,b.fname);toast("Downloaded "+b.fname+". Replace your copy with it.")}
   return blob.size;
+  }catch(e){Object.assign(b,prev);throw e}   /* a failed write must not use up a history slot */
 }
 async function createNom(b){   /* first Save of a PDF: ask where to put the new .mar book; returns null if cancelled */
   const base=b.fname.replace(/\.(pdf|mar)$/i,"");let h=null;
@@ -1418,8 +1458,9 @@ async function createNom(b){   /* first Save of a PDF: ask where to put the new 
     /* from now on this book is the .mar file: Save and AutoSave write into it, the original PDF is left alone */
     Object.assign(b,{nom:{pdfLen:pdfPart.size,pdfName:b.fname},handle:h,fname:h.name,file:await h.getFile(),perm:"granted",permTry:1,autoWarned:0});
     if(b===active){handle=h;fname=h.name;$("#title").textContent=fname.replace(/\.(pdf|mar)$/i,"")}
+    b.base=JSON.stringify(coreOf(b));b.baseT=Date.now();
     renderTabs();toast("Saved "+h.name+". Share this one file: it holds the PDF and all your notes.");
-  }else{nomDownload(blob,base+".mar");toast("Downloaded "+base+".mar. Open that file here to keep working in it.")}
+  }else{b.base=JSON.stringify(coreOf(b));b.baseT=Date.now();nomDownload(blob,base+".mar");toast("Downloaded "+base+".mar. Open that file here to keep working in it.")}
   return blob.size;
 }
 /* one save at a time per book; a manual save during an autosave simply waits for it */
@@ -1460,10 +1501,11 @@ const st=document.createElement("style");st.textContent=`#tl{position:fixed;top:
 #tl .th{flex-wrap:wrap;display:flex;gap:4px;padding:8px;border-bottom:1px solid var(--line)}#tl .th button{flex:1;padding:7px;border:0;border-radius:8px;background:none;color:var(--mute);font:600 13px var(--ui);cursor:pointer}#tl .th button.on{background:var(--hover);color:var(--ink)}
 #tl .tb{padding:10px;overflow:auto}#tl input{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:14px var(--ui)}
 #tl .r{padding:8px;border-radius:8px;cursor:pointer;margin-top:4px}#tl .r:hover{background:var(--hover)}#tl .r small{color:var(--mute);display:block}#tl mark{background:#ffe27a;color:#000;border-radius:3px}
-#tl .go2{margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:var(--acc);color:var(--on);font:600 13px var(--ui);cursor:pointer}#tl .x{float:right;border:0;background:none;color:var(--mute);cursor:pointer}`;document.head.append(st);
-const box=document.createElement("div");box.id="tl";box.innerHTML='<div class="th"><button data-t="s">Search</button><button data-t="b">Bookmarks</button><button data-t="f">Cards</button><button data-t="d">Draw</button><button data-t="v">Split</button><button data-t="c">Comments</button><button data-t="p">Progress</button><button data-t="r">Restore</button><button data-t="e">Export</button></div><div class="tb"></div>';document.body.append(box);
+#tl .go2{margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:var(--acc);color:var(--on);font:600 13px var(--ui);cursor:pointer}#tl #nl.pane{display:block;padding:0;overflow:visible;animation:none}#tl .x{float:right;border:0;background:none;color:var(--mute);cursor:pointer}`;document.head.append(st);
+const box=document.createElement("div");box.id="tl";box.innerHTML='<div class="th"><button data-t="n">Notes list</button><button data-t="s">Search</button><button data-t="b">Bookmarks</button><button data-t="f">Cards</button><button data-t="d">Draw</button><button data-t="v">Split</button><button data-t="c">Comments</button><button data-t="p">Progress</button><button data-t="r">Restore</button><button data-t="e">Export</button></div><div class="tb"></div>';document.body.append(box);
 const tb=box.querySelector(".tb"),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let tab="s",tok=0;
+const replyHtml=r=>`↳ <b>${esc(r.a)}</b>${r.d?` <span class="rd">· ${stamp(r.d)}</span>`:""}<div class="rt">${esc(r.t)}</div>`;
 const go=p=>{goTo(p);if(innerWidth<700)box.style.display="none"};
 const snip=(t,i,q)=>{const a=Math.max(0,i-40),z=Math.min(t.length,i+q.length+60);return(a?"…":"")+esc(t.slice(a,i))+"<mark>"+esc(t.slice(i,i+q.length))+"</mark>"+esc(t.slice(i+q.length,z))+(z<t.length?"…":"")};
 async function pageText(b,i){b._tx=b._tx||{};if(b._tx[i]==null){const c=await(await b.pdf.getPage(i)).getTextContent();b._tx[i]=c.items.map(x=>x.str).join(" ").replace(/\s+/g," ")}return b._tx[i]}
@@ -1482,8 +1524,9 @@ async function search(q,out,info){
   info.textContent=n?`${n} result${n>1?"s":""}${n>=300?" (first 300)":""}`:"Nothing found.";
 }
 function draw(){
-  box.querySelectorAll(".th button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));tb.innerHTML="";const b=active;
+  box.querySelectorAll(".th button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));document.getElementById("nlhold").append(document.getElementById("nl"));tb.innerHTML="";const b=active;
   if(!b){tb.textContent="Open a book first.";return}
+  if(tab==="n"){tb.append(document.getElementById("nl"));refreshList();return}
   if(tab==="s"){
     const i=document.createElement("input");i.placeholder="Search text, notes and notebooks…";const info=document.createElement("small"),out=document.createElement("div");info.style.cssText="display:block;margin-top:6px;color:var(--mute)";tb.append(i,info,out);i.focus();
     const showRec=()=>{out.innerHTML="";const r=getRec();info.textContent=r.length?"Recent searches":"";r.forEach(w=>{const d=document.createElement("div");d.className="r";d.textContent="🕘 "+w;d.onclick=()=>{i.value=w;search(w,out,info)};out.append(d)})};showRec();
@@ -1495,15 +1538,20 @@ function draw(){
     (b.bm||[]).forEach((m,k)=>{const d=document.createElement("div");d.className="r";d.innerHTML=`<button class="x" title="Remove">✕</button>${esc(m.l)}<small>page ${m.p}</small>`;d.onclick=()=>go(m.p);d.querySelector(".x").onclick=e=>{e.stopPropagation();b.bm.splice(k,1);setDirty();draw()};tb.append(d)});
     if(!(b.bm||[]).length){const e=document.createElement("small");e.style.cssText="display:block;margin-top:10px;color:var(--mute)";e.textContent="No bookmarks yet.";tb.append(e)}
   }else if(tab==="f"){cardsUI()}else if(tab==="p"){progUI()}else if(tab==="d"){drawUI()}else if(tab==="v"){splitUI()}else if(tab==="c"){commentsUI()}else if(tab==="r"){restoreUI()}else{
-    const p=document.createElement("div");p.innerHTML=`<p style="margin:0 0 6px">All highlights and notes in this book (${b.notes.length}), grouped by colour heading and page, as a document you can print or save as PDF.</p>`;
-    const sel=document.createElement("select");sel.style.cssText="width:100%;padding:7px;margin-top:6px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)";sel.innerHTML='<option value="">All colours</option>'+(b.palette||[]).map(c=>`<option value="${esc(c.id)}">${esc(c.label||c.color)}</option>`).join("");
-    const a=document.createElement("button");a.className="go2";a.textContent="Export notes";a.onclick=()=>exportNotes(b,sel.value);
-    const c=document.createElement("button");c.className="go2";c.style.marginLeft="6px";c.textContent="Copy quotes with citations";
-    c.onclick=()=>{const nm=b.fname.replace(/\.(pdf|mar)$/i,"");const t=(sel.value?b.notes.filter(n=>n.cid===sel.value):b.notes).filter(n=>n.text).sort((x,y)=>x.page-y.page).map(n=>`“${n.text}” (${nm}, p. ${n.page})`).join("\n\n");navigator.clipboard.writeText(t).then(()=>toast("Quotes copied"),()=>toast("Could not copy"))};
-    const m=document.createElement("button");m.className="go2";m.style.marginTop="6px";m.textContent="Share .mar with this colour only";
-    m.onclick=async()=>{if(!sel.value)return toast("Pick one colour first.");try{const st=nomState(b);st.notes=st.notes.filter(n=>n.cid===sel.value);st.hist=[];const side=await nomPack(st),pdf=b.nom?await nomPdfPart(b):b.file;
-      nomDownload(new Blob([nomHead(pdf.size,side),pdf,side.bytes],{type:NOM_MIME}),b.fname.replace(/\.(pdf|mar)$/i,"")+"-"+sel.options[sel.selectedIndex].text+".mar");toast("Shared copy created (your own book is unchanged)")}catch(e){alert("Could not create it: "+e.message)}};
-    p.append(sel,a,c,m);tb.append(p);
+    const nm=b.fname.replace(/\.(pdf|mar)$/i,""),nn=Object.keys(b.nb||{}).filter(q=>!nbBlank(b.nb[q])).length;
+    const sec=(h,t)=>{const x=document.createElement("div");x.className="xs";x.innerHTML=`<b>${h}</b><p>${t}</p>`;tb.append(x);return x};
+    const mkb=(par,t,fn)=>{const x=document.createElement("button");x.className="go2";x.textContent=t;x.onclick=fn;par.append(x);return x};
+    const sel=document.createElement("select");sel.className="xsel";sel.innerHTML='<option value="">All colours</option>'+(b.palette||[]).map(c=>`<option value="${esc(c.id)}">${esc(c.label||c.color)}</option>`).join("");
+    sec("Colour","Used by the notes export, copy quotes and share below.").append(sel);
+    const s1=sec("Notes",`${b.notes.length} highlight${b.notes.length===1?"":"s"} with your notes, replies (with dates) and bookmarks, grouped by colour heading.`);
+    mkb(s1,"Export notes (.html)",()=>exportNotes(b,sel.value));
+    const s2=sec("Notebook",`${nn} notebook page${nn===1?"":"s"} with writing. The handwriting font, size and formatting stay as they look on screen.`);
+    const lab=document.createElement("label");lab.className="xl";const cb=document.createElement("input");cb.type="checkbox";lab.append(cb," Start each page on a new printed sheet");s2.append(lab);
+    mkb(s2,"Export notebook (.html)",()=>exportNotebook(b,cb.checked));
+    const s3=sec("Copy and share","");
+    mkb(s3,"Copy quotes with citations",()=>{const t=(sel.value?b.notes.filter(n=>n.cid===sel.value):b.notes).filter(n=>n.text).sort((x,y)=>x.page-y.page).map(n=>`“${n.text}” (${nm}, p. ${n.page})`).join("\n\n");navigator.clipboard.writeText(t).then(()=>toast("Quotes copied"),()=>toast("Could not copy"))});
+    mkb(s3,"Share .mar with this colour only",async()=>{if(!sel.value)return toast("Pick one colour first.");try{const st=nomState(b);st.notes=st.notes.filter(n=>n.cid===sel.value);st.hist=[];const side=await nomPack(st),pdf=b.nom?await nomPdfPart(b):b.file;
+      nomDownload(new Blob([nomHead(pdf.size,side),pdf,side.bytes],{type:NOM_MIME}),nm+"-"+sel.options[sel.selectedIndex].text+".mar");toast("Shared copy created (your own book is unchanged)")}catch(e){alert("Could not create it: "+e.message)}});
   }
 }
 /* drawings for the export: each drawn page is rendered with its strokes on top and embedded as a picture */
@@ -1515,15 +1563,110 @@ async function inkPages(b){const out=[];
     out.push(`<div class="n"><b>Page ${p}</b><br><img src="${cv.toDataURL("image/jpeg",.8)}"></div>`)}
   return out.length?"<h2>Drawings</h2>"+out.join(""):""}
 const RK="marginalia-recent-searches",getRec=()=>{try{return JSON.parse(localStorage.getItem(RK))||[]}catch(e){return[]}},addRec=q=>{q=(q||"").trim();if(!q)return;const a=[q,...getRec().filter(x=>x.toLowerCase()!==q.toLowerCase())].slice(0,5);try{localStorage.setItem(RK,JSON.stringify(a))}catch(e){}};
+/* ---- export the notebook pages as one printable HTML file that works offline (phone, tablet, laptop) ---- */
+/*NBX-START*/
+const nbxEsc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function nbxClean(html){   /* the notebook text is rewritten without scripts, event handlers or outside links, so a shared book cannot put anything harmful into the export */
+  const d=new DOMParser().parseFromString("<body>"+html,"text/html").body;
+  d.querySelectorAll("script,iframe,object,embed,link,meta,style,base,form,input,button,textarea,select,svg,video,audio,canvas").forEach(x=>x.remove());
+  d.querySelectorAll("*").forEach(el=>{
+    [...el.attributes].forEach(a=>{
+      const n=a.name.toLowerCase(),v=a.value.trim();
+      if(n.startsWith("on")||n==="srcdoc"||n==="contenteditable"||n==="spellcheck"||n==="data-ph")el.removeAttribute(a.name);
+      else if(n==="href"&&!/^(https?:|mailto:|#)/i.test(v))el.removeAttribute(a.name);
+      else if(n==="src"&&!/^data:image\/(png|jpe?g|gif|webp);/i.test(v))el.removeAttribute(a.name);
+      else if(n==="style"&&/url\s*\(|expression|@import/i.test(v))el.removeAttribute(a.name);
+    });
+    if(el.tagName==="A"){el.setAttribute("rel","noopener");el.setAttribute("target","_blank")}
+  });
+  d.querySelectorAll("img").forEach(i=>{if(!i.getAttribute("src"))i.remove()});
+  return d.innerHTML;
+}
+function nbxDoc(name,total,pages,sheet,fonts,z){   /* pages: [[pageNumber, html], ...]. Looks like the on-screen notebook: same handwriting font, size, line spacing, paper and ink. */
+  const idx=pages.length>1?`<p class="idx noprint"><b>Jump to page</b>${pages.map(([p])=>`<a href="#p${p}">${p}</a>`).join("")}</p>`:"";
+  const secs=pages.map(([p,h])=>`<section class="pg" id="p${p}"><div class="nbh"><b>Notebook</b><span>Page ${p} of ${total}</span></div><div class="c">${nbxClean(h)}</div></section>`).join("");
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; font-src data:"><title>${nbxEsc(name)} – notebook</title><style>
+${fonts||""}
+:root{--z:${z||1.3};--desk:#e6e8ef;--paper:#fffdf7;--line:#dfe3f1;--ink:#1b1f33;--mute:#6a7088;--acc:#3a4bd8;--margin:#f1b9b9;--hole:#c6cbe0;--hand:"Patrick Hand","Segoe Print","Bradley Hand","Chalkboard SE","Comic Sans MS",cursive;--ui:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif}
+@media(prefers-color-scheme:dark){:root{--desk:#14161f;--paper:#1f2233;--line:#2d3250;--ink:#e8eaf6;--mute:#9aa0bd;--margin:#5b3142;--hole:#3a3f5f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--desk);color:var(--ink);font:15px/1.5 var(--ui);padding:22px 14px 70px}
+.wrap{max-width:calc(var(--z)*520px);margin:0 auto}
+h1{font:700 26px/1.2 var(--ui);margin:0 0 4px}
+.meta,.hint{color:var(--mute);font:14px var(--ui);margin:0 0 10px}
+.idx{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 8px;font:14px var(--ui)}
+.idx b{margin-right:4px}.idx a{padding:3px 10px;border:1px solid var(--line);border-radius:999px;color:var(--acc);text-decoration:none}
+.pg{position:relative;margin:22px 0 0;background:var(--paper);border-radius:3px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.18),0 12px 40px rgba(10,15,40,.2);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pg:before{content:"";position:absolute;left:0;top:0;bottom:0;width:calc(var(--z)*15px);background:radial-gradient(circle at 50% 50%,var(--hole) 0 27%,transparent 30%) 0 0/100% calc(var(--z)*36px) repeat-y}
+.pg:after{content:"";position:absolute;left:calc(var(--z)*31px);top:calc(var(--z)*38px);bottom:0;width:1px;background:var(--margin)}
+.nbh{display:flex;justify-content:space-between;align-items:baseline;padding:calc(var(--z)*14px) calc(var(--z)*20px) calc(var(--z)*8px) calc(var(--z)*38px);color:var(--mute);font:600 calc(var(--z)*10px)/1 var(--ui);letter-spacing:.09em;text-transform:uppercase;border-bottom:1px solid var(--line)}.nbh span{color:var(--acc)}
+.c{position:relative;padding:0 calc(var(--z)*20px) calc(var(--z)*14px) calc(var(--z)*38px);font-family:var(--hand);font-size:calc(var(--z)*16px);line-height:calc(var(--z)*24px);color:var(--ink);background:repeating-linear-gradient(transparent 0 calc(var(--z)*24px - 1px),var(--line) calc(var(--z)*24px - 1px) calc(var(--z)*24px));overflow-wrap:anywhere;min-height:calc(var(--z)*96px)}
+.c p,.c div{margin:0}.c ul,.c ol{margin:0;padding-left:calc(var(--z)*22px)}.c li{margin:0}
+.c p,.c li,.c h3{line-height:calc(var(--z)*24px)}.c h3{margin:0;font-size:calc(var(--z)*16px)}
+.c sup,.c sub{line-height:0}.c img{max-width:100%;height:auto;vertical-align:middle;margin-top:calc(var(--z)*-12px);margin-bottom:calc(var(--z)*-12px)}
+.c table{border-collapse:collapse;max-width:100%}.c td,.c th{border:1px solid var(--mute);padding:3px 7px;vertical-align:top}
+.c a{color:var(--acc)}.c code{background:rgba(120,130,170,.18);border-radius:4px;padding:0 .25em;font-size:.9em}
+@page{margin:12mm}
+@media print{body{background:#fff;padding:0}.wrap{max-width:none}.noprint{display:none!important}.pg{box-shadow:none;margin-top:14px}body.sheet .pg{break-after:page;margin-top:0}body.sheet .pg:last-of-type{break-after:auto}}
+</style></head><body class="${sheet?"sheet":""}"><div class="wrap"><h1>${nbxEsc(name)} – notebook</h1><p class="meta">${pages.length} page${pages.length>1?"s":""} with notes · exported ${new Date().toLocaleDateString()} from Marginalia</p><p class="hint noprint">To print, use your browser's Print command (Ctrl+P, or Share → Print on a phone). You can also save it as PDF.</p>${idx}${secs}</div></body></html>`;
+}
+/*NBX-END*/
+/* the page's own fonts are copied into the export so it looks the same offline and on other devices (falls back to the same font stack when offline) */
+const fontCache={};
+async function embedFont(fam,spec){
+  if(fam in fontCache)return fontCache[fam];
+  try{
+    const css=await(await fetch("https://fonts.googleapis.com/css2?family="+spec+"&display=swap")).text();
+    let bl=[...css.matchAll(/\/\*\s*([\w-]+)\s*\*\/\s*(@font-face\s*\{[^}]*\})/g)].filter(m=>m[1]==="latin").map(m=>m[2]);
+    if(!bl.length)bl=css.match(/@font-face\s*\{[^}]*\}/g)||[];
+    let out="";
+    for(let blk of bl){
+      for(const u of [...blk.matchAll(/url\((https:[^)]+)\)/g)]){
+        const by=new Uint8Array(await(await fetch(u[1])).arrayBuffer());let t="";for(let i=0;i<by.length;i+=8192)t+=String.fromCharCode.apply(null,by.subarray(i,i+8192));
+        blk=blk.replace(u[1],"data:font/woff2;base64,"+btoa(t));
+      }
+      out+=blk.replace(/unicode-range:[^;]*;/,"")+"\n";
+    }
+    return fontCache[fam]=out;
+  }catch(e){return fontCache[fam]=""}
+}
+async function exportNotebook(b,sheet){
+  const pages=Object.keys(b.nb||{}).map(Number).filter(p=>b.nb[p]&&!nbBlank(b.nb[p])).sort((x,y)=>x-y).map(p=>[p,b.nb[p]]);
+  if(!pages.length)return toast("Your notebook is empty. Turn on Notebook and write on a page first.");
+  toast("Preparing export…");const name=b.fname.replace(/\.(pdf|mar)$/i,""),fonts=await embedFont("Patrick Hand","Patrick+Hand");
+  nomDownload(new Blob([nbxDoc(name,b.pdf.numPages,pages,sheet,fonts,Math.min(2,Math.max(.8,parseFloat(getComputedStyle(document.getElementById("pages")).getPropertyValue("--z"))||1.3)))],{type:"text/html"}),name+"-notebook.html");
+  toast(`Exported ${name}-notebook.html (${pages.length} page${pages.length>1?"s":""})`+(fonts?"":". You are offline, so a similar handwriting font is used."));
+}
+function notebookBlock(b){
+  const n=Object.keys(b.nb||{}).filter(p=>!nbBlank(b.nb[p])).length;
+  const w=document.createElement("div");w.style.cssText="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)";
+  w.innerHTML=`<p style="margin:0 0 6px"><b>Notebook</b><br>Your notebook pages (${n} with writing) as one printable HTML file. It works offline in any browser, so you can read it on a phone or print it.</p>`;
+  const lab=document.createElement("label");lab.style.cssText="display:flex;gap:8px;align-items:center;margin:6px 0";
+  const cb=document.createElement("input");cb.type="checkbox";cb.style.width="auto";lab.append(cb,"Start each notebook page on a new printed sheet");
+  const x=document.createElement("button");x.className="go2";x.textContent="Export notebook";x.onclick=()=>exportNotebook(b,cb.checked);
+  w.append(lab,x);tb.append(w);
+}
 async function exportNotes(b,fid){
-  let ink="";try{if(Object.keys(b.ink||{}).length){toast("Preparing drawings…");ink=await inkPages(b)}}catch(e){console.error(e)}
+  toast("Preparing export…");
+  let ink="";try{if(Object.keys(b.ink||{}).length)ink=await inkPages(b)}catch(e){console.error(e)}
+  const fonts=await embedFont("Newsreader","Newsreader:ital,wght@0,400;1,400");
   const pal=b.palette||[],groups=pal.map(c=>({h:c.label||c.color,c:c.color,id:c.id,n:[]}));const other={h:"Other",c:"#999",id:null,n:[]};
   (fid?b.notes.filter(n=>n.cid===fid):b.notes).forEach(n=>(groups.find(g=>g.id===n.cid)||other).n.push(n));if(other.n.length)groups.push(other);
   const bm=(b.bm||[]).map(m=>`<li>${esc(m.l)} (page ${m.p})</li>`).join("");
-  const body=groups.filter(g=>g.n.length).map(g=>`<h2 style="border-left:8px solid ${esc(g.c)};padding-left:8px">${esc(g.h)}</h2>`+g.n.sort((x,y)=>x.page-y.page).map(n=>`<div class="n"><b>Page ${n.page}</b>${n.author?" · "+esc(n.author):""}${n.date?" · "+new Date(n.date).toLocaleDateString():""}<blockquote>${esc(n.text||"")}</blockquote>${n.html||""}${(n.replies||[]).map(r=>`<div style="margin-left:18px;color:#444">↳ <b>${esc(r.a)}</b>: ${esc(r.t)}</div>`).join("")}</div>`).join("")).join("");
+  const body=groups.filter(g=>g.n.length).map(g=>`<h2 style="border-left:8px solid ${esc(g.c)};padding-left:8px">${esc(g.h)}</h2>`+g.n.sort((x,y)=>x.page-y.page).map(n=>`<div class="n"><div class="by"><b>Page ${n.page}</b>${n.author?" · "+esc(n.author):""}${n.date?" · "+stamp(n.date):""}</div><blockquote>${esc(n.text||"")}</blockquote><div class="nt">${nbxClean(n.html||"")}</div>${(n.replies||[]).map(r=>`<div class="rp">${replyHtml(r)}</div>`).join("")}</div>`).join("")).join("");
   const name=b.fname.replace(/\.(pdf|mar)$/i,"");
-  const html=`<!doctype html><meta charset="utf-8"><title>Notes – ${esc(name)}</title><style>body{font:15px/1.5 Georgia,serif;max-width:760px;margin:30px auto;padding:0 16px}blockquote{margin:6px 0;padding-left:10px;border-left:3px solid #ccc;color:#555}.n{margin:12px 0;page-break-inside:avoid}img{max-width:100%}table{border-collapse:collapse}td,th{border:1px solid #bbb;padding:3px 6px}</style><h1>${esc(name)} – notes</h1>${bm?"<h2>Bookmarks</h2><ul>"+bm+"</ul>":""}${body||(ink?"":"<p>No notes yet.</p>")}${ink}`;
-  nomDownload(new Blob([html],{type:"text/html"}),name+"-notes.html");toast("Exported "+name+"-notes.html");
+  const html=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; font-src data:"><title>Notes – ${esc(name)}</title><style>
+${fonts}
+:root{--ink:#161a28;--mute:#6a7088;--bg:#fff;--line:#dcdfe9}
+@media(prefers-color-scheme:dark){:root{--ink:#e8eaf6;--mute:#9aa0bd;--bg:#14161f;--line:#2d3250}}
+body{font:17px/1.55 "Newsreader",Georgia,serif;color:var(--ink);background:var(--bg);max-width:760px;margin:30px auto;padding:0 16px}
+h1,h2,.by{font-family:"Figtree","Segoe UI",system-ui,sans-serif}.by{font-size:14px;color:var(--mute)}.by b{color:var(--ink)}
+blockquote{margin:6px 0;padding-left:10px;border-left:3px solid var(--line);color:var(--mute);font:italic 14px/1.4 "Newsreader",Georgia,serif}
+.n{margin:14px 0;break-inside:avoid}.nt ul,.nt ol{margin:4px 0;padding-left:22px}.nt h3{margin:4px 0;font-size:18px}.nt img{max-width:100%;height:auto}.nt table{border-collapse:collapse}.nt td,.nt th{border:1px solid var(--mute);padding:3px 6px}
+.rp{margin:8px 0 0 18px;font-size:16px}.rd{color:var(--mute);font:13px "Figtree","Segoe UI",system-ui,sans-serif}.rt{margin-top:2px}
+img{max-width:100%}
+</style></head><body><h1>${esc(name)} – notes</h1>${bm?"<h2>Bookmarks</h2><ul>"+bm+"</ul>":""}${body||(ink?"":"<p>No notes yet.</p>")}${ink}</body></html>`;
+  nomDownload(new Blob([html],{type:"text/html"}),name+"-notes.html");toast("Exported "+name+"-notes.html"+(fonts?"":". You are offline, so a similar font is used."));
 }
 function cardsUI(){const b=active,c=b.notes.filter(n=>n.text);if(!c.length){tb.textContent="Highlight some text first: each highlight becomes a card (quote on the front, your note on the back).";return}
   let i=0,show=false;const v=document.createElement("div");
@@ -1539,7 +1682,7 @@ setInterval(()=>{const b=active;if(!b||document.hidden)return;const p=b.prog=b.p
   if(pom&&Date.now()>=pom.end){pom.b.prog.pomo++;pom=null;toast("Study session done. Take a 5 minute break.");setDirty()}},15000);
 function commentsUI(){const b=active,c=b.notes.filter(n=>n.text);if(!c.length){tb.textContent="No notes yet. Replies from a teacher or friend appear under each note.";return}
   c.sort((x,y)=>x.page-y.page).forEach(n=>{const d=document.createElement("div");d.className="r";d.style.border="1px solid var(--line)";
-    d.innerHTML=`<small>page ${n.page}</small>${esc(n.text.slice(0,120))}`+(n.replies||[]).map(r=>`<div style="margin:4px 0 0 12px">↳ <b>${esc(r.a)}</b>: ${esc(r.t)}</div>`).join("");
+    d.innerHTML=`<small>page ${n.page}</small>${esc(n.text.slice(0,120))}`+(n.replies||[]).map(r=>`<div style="margin:6px 0 0 12px">${replyHtml(r)}</div>`).join("");
     const i=document.createElement("input");i.placeholder="Reply as "+(student||"Reader")+"…";i.style.marginTop="6px";i.onclick=e=>e.stopPropagation();
     i.onkeydown=e=>{if(e.key==="Enter"&&i.value.trim()){(n.replies=n.replies||[]).push({a:student||"Reader",d:Date.now(),t:i.value.trim()});setDirty();commentsUI_redraw()}};
     d.onclick=()=>go(n.page);d.append(i);tb.append(d)})}
@@ -1553,10 +1696,11 @@ async function restoreUI(){const b=active,cur0=JSON.stringify(coreOf(b)),bk=awai
   if(bk&&bk.s!==cur0)L.push(["Automatic backup of unsaved work",bk.t,bk.s]);(b.hist||[]).forEach(h=>{if(h.s!==cur0)L.push(["Earlier saved version",h.t,h.s])});
   tb.innerHTML="";const cr=document.createElement("div");cr.className="r";cr.style.cssText="border:2px solid var(--acc);background:var(--hover);cursor:default";
   cr.innerHTML=`<b>Currently open ✓</b><small>This is what is on screen now (${b.dirty?"has unsaved changes":"saved"})</small>`;tb.append(cr);
-  if(!L.length){const e=document.createElement("small");e.style.cssText="display:block;margin-top:10px;color:var(--mute)";e.textContent="No other versions yet. Unsaved work is backed up every minute, and the last 3 saves are kept in the book.";tb.append(e)}
-  L.forEach(([n,t,s])=>{const d=document.createElement("div");d.className="r";d.style.border="1px solid var(--line)";d.innerHTML=`${n}<small>${new Date(t).toLocaleString()}</small>`;
+  if(!L.length){const e=document.createElement("small");e.style.cssText="display:block;margin-top:10px;color:var(--mute)";e.textContent="No earlier versions yet. Each time you save, the previous version is kept inside the .mar file (last 3), so it travels with the book to any computer. Unsaved work is also backed up on this computer every minute.";tb.append(e)}
+  const info=(s)=>{try{const o=JSON.parse(s);return `${o.notes.length} note${o.notes.length===1?"":"s"} · ${Object.keys(o.nb||{}).length} notebook page${Object.keys(o.nb||{}).length===1?"":"s"}`+(o.ink?` · ${Object.keys(o.ink).filter(k=>o.ink[k].length).length} drawn page(s)`:"")}catch(e){return ""}};
+  L.forEach(([n,t,s])=>{const d=document.createElement("div");d.className="r";d.style.border="1px solid var(--line)";d.innerHTML=`${n}<small>${new Date(t).toLocaleString()}</small><small>${info(s)}</small>`;
     const x=document.createElement("button");x.className="go2";x.textContent="Restore this";x.onclick=async()=>{if(!confirm("Replace the notes in this book with this version? Your current notes will be backed up first."))return;
-      await bset(b.fname,{t:Date.now(),s:cur0});const o=JSON.parse(s);closeNote();Object.assign(b,{notes:o.notes.map(q=>({...q,editing:false})),palette:o.palette,nb:o.nb||{},bm:o.bm||[]});setDirty();active=null;await activate(b,true);toast("Restored. Press Save to keep it.")};d.append(x);tb.append(d)})}
+      await bset(b.fname,{t:Date.now(),s:cur0});const o=JSON.parse(s);closeNote();Object.assign(b,{notes:o.notes.map(q=>({...q,editing:false})),palette:o.palette,nb:o.nb||{},bm:o.bm||[]},("ink" in o)?{ink:o.ink||null,inkv:(b.inkv||0)+1}:{});setDirty();active=null;await activate(b,true);toast("Restored. Press Save to keep it.")};d.append(x);tb.append(d)})}
 /* ---- freehand drawing: a transparent SVG layer on each page; strokes are stored per page as fractions of the page size ---- */
 const pen={on:false,c:"#e63946",w:.004,er:false},NS="http://www.w3.org/2000/svg";
 st.textContent+=`.page>svg.ink{position:absolute;inset:0;width:100%;height:100%;z-index:6;touch-action:none}`;
@@ -1606,14 +1750,11 @@ const tbtn=(id,label,title,t,after)=>{const x=document.createElement("button");x
  let c=$("#total");c=tbtn("bsearch","🔍","Search this book, your notes and notebooks","s",c);tbtn("bbm","🔖","Bookmarks","b",c);
  tbtn("brest","▾","Earlier versions and unsaved-work backup","r",$("#savepdf"))}
 document.addEventListener("pointerdown",e=>{if(box.style.display==="flex"&&!box.contains(e.target)&&!e.target.closest(".tlb,.nbar"))box.style.display="none"},true);
-/* Notes tab of the left panel: Study (flashcards) and Export */
-setInterval(()=>{const nl=$("#nl");if(!nl||nl.querySelector(".nbar"))return;const d=document.createElement("div");d.className="nbar";
-  [["🃏 Study","Flashcards from your highlights","f"],["⤓ Export","Export notes, copy citations, share one colour","e"]].forEach(([l,ti,t])=>{const x=document.createElement("button");x.textContent=l;x.title=ti;x.onclick=()=>openTab(t,x);d.append(x)});nl.prepend(d)},700);
 /* inside every note window: copy citation and replies */
 const _rp=renderPop;renderPop=function(n){_rp(n);try{noteExtras(n)}catch(e){console.error(e)}};
 function noteExtras(n){const pop=$("#note"),old=pop.querySelector(".xt");if(old)old.remove();const d=document.createElement("div");d.className="xt";d.style.cssText="padding:8px 12px 12px;border-top:1px solid var(--line);font:13px var(--ui)";
   const nm=active.fname.replace(/\.(pdf|mar)$/i,""),cb=document.createElement("button");cb.textContent="Copy citation";cb.onclick=()=>navigator.clipboard.writeText(`“${n.text}” (${nm}, p. ${n.page})`).then(()=>toast("Citation copied"),()=>toast("Could not copy"));d.append(cb);
-  (n.replies||[]).forEach(r=>{const q=document.createElement("div");q.style.marginTop="6px";q.innerHTML=`↳ <b>${esc(r.a)}</b>: ${esc(r.t)}`;d.append(q)});
+  (n.replies||[]).forEach(r=>{const q=document.createElement("div");q.style.marginTop="8px";q.innerHTML=replyHtml(r);d.append(q)});
   const i=document.createElement("input");i.placeholder="Reply as "+(student||"Reader")+" (press Enter)…";
   i.onkeydown=e=>{e.stopPropagation();if(e.key==="Enter"&&i.value.trim()){(n.replies=n.replies||[]).push({a:student||"Reader",d:Date.now(),t:i.value.trim()});setDirty();noteExtras(n)}};d.append(i);pop.append(d)}
 /* ---- search flash: the matched words blink in the accent colour in the PDF text, the notebook page and the note (CSS Custom Highlight API: nothing is added to your notes) ---- */
@@ -1626,6 +1767,276 @@ function blink(rs){if(!rs.length||!window.CSS||!CSS.highlights||typeof Highlight
 function flashAt(p,q,nid){goTo(p);let tries=0;
   const t=setInterval(()=>{const pg=document.querySelector(`#pages .page[data-p="${p}"]`),rs=pg?findRanges(pg,q):[];
     if(rs.length||++tries>25){clearInterval(t);if(nid)openNote(nid);setTimeout(()=>blink(rs.concat(nid?findRanges($("#note"),q):[])),nid?200:0)}},120)}
+st.textContent+=`.rd{color:var(--mute);font-size:12px;font-weight:400}.xt .rt{margin-top:2px}#tl .xs{padding:10px 0;border-top:1px solid var(--line)}#tl .xs:first-child{border-top:0;padding-top:0}#tl .xs p{margin:2px 0 8px;color:var(--mute);font-size:13px}#tl .xsel{width:100%;padding:7px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink)}#tl .xl{display:flex;gap:6px;align-items:center;margin:0 0 8px;font-size:13px}#tl .xl input{width:auto}#tl .xs .go2{margin:0 6px 6px 0}`;
+window.MG={openTab,pen,setPenBtn};
+})();
+</script>
+<script>
+/* ===== Title bar with ribbon tabs in the middle. Choosing a tab opens its action panel; choosing an action (or clicking away) closes it, unless the panel is pinned ===== */
+(()=>{
+const bar=document.getElementById("bar"),N=id=>document.getElementById(id),D=c=>{const d=document.createElement("div");if(c)d.className=c;return d};
+[["open","Open"],["closebk","Close book"],["brest","Versions"],["prev","Previous"],["next","Next"],["zout","Zoom out"],["zin","Zoom in"],["bsearch","Search"],["bbm","Bookmarks"],["boost","Text weight"],["pgmode","Dark pages"],["bsplit","Split view"],["bprog","Progress"]].forEach(([i,t])=>{const x=N(i);if(x)x.dataset.lbl=t});
+const btn=(ico,l,fn,id)=>{const x=document.createElement("button");x.innerHTML=ico;x.dataset.lbl=l;if(id)x.id=id;x.onclick=()=>fn(x);return x};
+const group=(name,items,keep)=>{const g=D("rg"+(keep?" keep":"")),r=D("rb"),n=D("rn");items.forEach(x=>x&&r.append(x));n.textContent=name;g.append(r,n);return g};
+/* title bar: logo (only while the left pane is hidden), menu, book name | tabs | AutoSave, Export, Save, name, dark mode */
+const ex=document.createElement("button");ex.id="bexport";ex.innerHTML='<span class="ei">⤓</span><span class="et">Export</span>';
+ex.onclick=()=>{if(!active)return toast("Open a book first.");MG.openTab("e",ex)};
+const tbar=D(),L=D("l"),R=D("r"),lg=N("logo").cloneNode(true);lg.id="tlogo";lg.removeAttribute("width");lg.removeAttribute("height");
+const rt=D();rt.id="rtabs";rt.setAttribute("role","tablist");
+tbar.id="tbar";L.append(lg,N("tgl"),N("title"));R.append(N("autosv"),ex,N("savepdf"),N("who"),N("theme"));tbar.append(L,rt,R);
+/* Draw tab */
+const P=MG.pen;
+const penB=btn("✎","Pen",()=>{P.on=!P.on;if(!P.on)P.er=false;MG.setPenBtn();sync()},"rpen"),erB=btn("⌫","Eraser",()=>{P.er=!P.er;if(P.er)P.on=true;MG.setPenBtn();sync()},"rer");
+const cols=["#e63946","#1d6fe0","#2e9e5b","#111111","#f2b705"].map((c,i)=>{const x=document.createElement("button");x.className="sw";x.style.background=c;x.id="rcol"+(i+1);x.dataset.c=c;x.onclick=()=>{P.c=c;P.er=false;P.on=true;MG.setPenBtn();sync()};return x});
+const wd=[["Thin",.002],["Medium",.004],["Thick",.009]].map(([n,v],i)=>{const x=document.createElement("button");x.className="wb";x.id="rw"+(i+1);x.textContent=n;x.dataset.w=v;x.onclick=()=>{P.w=v;sync()};return x});
+const undo=btn("↶","Undo stroke",()=>{const a=active.ink&&active.ink[cur];if(a&&a.length){a.pop();active.inkv=(active.inkv||0)+1;setDirty()}},"rundo");
+const clr=btn("🗑","Clear page",()=>{if(active.ink&&active.ink[cur]&&active.ink[cur].length&&confirm("Remove all drawing on page "+cur+"?")){active.ink[cur]=[];active.inkv=(active.inkv||0)+1;setDirty()}},"rclr");
+function sync(){penB.classList.toggle("on",P.on&&!P.er);erB.classList.toggle("on",P.er);cols.forEach(x=>x.classList.toggle("sel",x.dataset.c===P.c&&!P.er));wd.forEach(x=>x.classList.toggle("on",+x.dataset.w===P.w))}
+const PGI=N("pg"),pgw=D("pgw");pgw.append(PGI,N("total"));
+const notesPanel=btn("☰","Notes list",x=>MG.openTab("n",x),"rnotes"),cards=btn("🃏","Flashcards",x=>MG.openTab("f",x),"rcards"),repl=btn("💬","Replies",x=>MG.openTab("c",x),"rrepl");
+const P_={
+ home:[group("File",[N("open"),N("closebk"),N("brest")],true),group("Go to",[N("prev"),pgw,N("next")]),group("Find",[N("bsearch"),N("bbm")])],
+ view:[group("Zoom",[N("zout"),N("zl"),N("zin")]),group("Appearance",[N("boost"),N("pgmode")])],
+ notes:[group("Notebook",[N("nbtgl")]),group("Notes",[notesPanel,repl])],
+ draw:[group("Pen",[penB,erB]),group("Colour",cols),group("Width",wd),group("Page",[undo,clr])],
+ study:[group("Review",[cards]),group("Track",[N("bprog")]),group("Reference",[N("bsplit")])]
+};
+const names={home:"Home",view:"View",notes:"Notes",draw:"Draw",study:"Study"};
+/* the panel itself, with its own "keep pinned" switch */
+const rpanel=D();rpanel.id="rpanel";const body=D("rpbody"),pin=document.createElement("button");pin.id="rpin";pin.className="rpin";pin.innerHTML='📌 <span>Keep action panel pinned</span>';
+rpanel.append(body,pin);
+let cur_="home",pinned=false,openP=false,hideT=0;try{cur_=localStorage.getItem("mg-rtab")||"home";pinned=localStorage.getItem("mg-rpin")==="1"}catch(e){}if(!P_[cur_])cur_="home";
+const panes={},tabB={};
+Object.keys(P_).forEach(k=>{const b=document.createElement("button");b.textContent=names[k];b.dataset.r=k;b.id="rt-"+k;b.setAttribute("role","tab");rt.append(b);tabB[k]=b;const p=D("rp");P_[k].forEach(g=>p.append(g));body.append(p);panes[k]=p;
+  b.onclick=()=>{if(!pinned&&openP&&cur_===k)return hide();show(k)}});
+function mark(){Object.keys(panes).forEach(x=>{const on=x===cur_&&(openP||pinned);panes[x].classList.toggle("on",x===cur_);tabB[x].classList.toggle("on",on);tabB[x].setAttribute("aria-selected",on)})}
+function show(k){clearTimeout(hideT);if(k)cur_=k;try{localStorage.setItem("mg-rtab",cur_)}catch(e){}
+  if(!openP||rpanel.classList.contains("hide")){rpanel.classList.remove("show","hide");void rpanel.offsetWidth}
+  openP=true;rpanel.classList.remove("hide");rpanel.classList.add("show");mark();sync()}
+function hide(){if(pinned||!openP)return;openP=false;rpanel.classList.add("hide");mark();hideT=setTimeout(()=>{if(!openP)rpanel.classList.remove("show","hide")},170)}
+function setPin(v){pinned=v;try{localStorage.setItem("mg-rpin",v?"1":"0")}catch(e){}bar.classList.toggle("pinned",v);pin.setAttribute("aria-pressed",v);if(v)show();else mark()}
+pin.onclick=()=>setPin(!pinned);
+/* choosing an action, pressing Enter in the page box, clicking elsewhere or Esc closes the panel */
+rpanel.addEventListener("click",e=>{const b=e.target.closest("button");if(!b||b===pin)return;setTimeout(hide,0)});
+PGI.addEventListener("keydown",e=>{if(e.key==="Enter")setTimeout(hide,0)});
+document.addEventListener("pointerdown",e=>{if(openP&&!pinned&&!e.target.closest("#rpanel,#rtabs"))hide()},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")hide()});
+bar.prepend(tbar);bar.append(rpanel);
+const hold=D();hold.hidden=true;bar.append(hold);
+bar.querySelectorAll(":scope>.grp").forEach(g=>{[...g.children].forEach(c=>{if(!c.classList.contains("sep"))hold.append(c)});g.remove()});
+window.MGR={show,hide,setPin,tab:k=>show(k),get pinned(){return pinned},get open(){return openP}};
+setPin(pinned);if(!pinned)mark();
+setInterval(()=>{document.body.classList.toggle("nobk",!active);if(!active&&openP&&cur_!=="home")show("home");if(openP&&cur_==="draw")sync()},400);
+})();
+</script>
+<script>
+/* ===== Shortcuts: hold N, then press a key. Plus up-to-date tooltips for every control ===== */
+(()=>{
+const $=id=>document.getElementById(id);
+const need=()=>{if(active)return true;toast("Open a book first.");return false};
+const clk=(id,free)=>{const b=$(id);if(!b)return;if(!free&&!need())return;if(b.disabled){toast("That action is not available right now.");return}b.click()};
+const pop=t=>{if(!need())return;MGR.hide();MG.openTab(t,$("rtabs"))};
+const tab=k=>MGR.tab(k),go=()=>{if(!need())return;MGR.show("home");setTimeout(()=>{const i=$("pg");i.focus();i.select()},60)};
+/* [key codes, shift?, label, name, group, action, element id] */
+const R=[
+["KeyO",0,"O","Open a book","File",()=>clk("open",1),"open"],
+["KeyW",0,"W","Close this book","File",()=>clk("closebk"),"closebk"],
+["KeyV",0,"V","Versions","File",()=>pop("r"),"brest"],
+["KeyS",0,"S","Save","File",()=>clk("savepdf"),"savepdf"],
+["KeyE",0,"E","Export","File",()=>clk("bexport"),"bexport"],
+["KeyZ",0,"Z","AutoSave on / off","File",()=>clk("autosv"),"autosv"],
+["KeyI",0,"I","Your name","File",()=>clk("who",1),"who"],
+["KeyM",0,"M","Dark / light mode","File",()=>clk("theme",1),"theme"],
+["KeyC",0,"C","Contents pane","File",()=>clk("tgl",1),"tgl"],
+["Digit1",0,"1","Home tab","Action panel",()=>tab("home"),"rt-home"],
+["Digit2",0,"2","View tab","Action panel",()=>tab("view"),"rt-view"],
+["Digit3",0,"3","Notes tab","Action panel",()=>tab("notes"),"rt-notes"],
+["Digit4",0,"4","Draw tab","Action panel",()=>tab("draw"),"rt-draw"],
+["Digit5",0,"5","Study tab","Action panel",()=>tab("study"),"rt-study"],
+["Space",0,"Space","Show / hide the action panel","Action panel",()=>MGR.open?MGR.hide():MGR.show()],
+["Period",0,".","Keep the action panel pinned","Action panel",()=>clk("rpin",1),"rpin"],
+["ArrowLeft",0,"←","Previous page","Go to",()=>clk("prev"),"prev"],
+["ArrowRight",0,"→","Next page","Go to",()=>clk("next"),"next"],
+["KeyG",0,"G","Go to a page number","Go to",go,"pg"],
+["KeyF",0,"F","Search","Find",()=>pop("s"),"bsearch"],
+["KeyB",0,"B","Bookmarks","Find",()=>pop("b"),"bbm"],
+[["Equal","NumpadAdd"],0,"+","Zoom in","View",()=>clk("zin"),"zin"],
+[["Minus","NumpadSubtract"],0,"-","Zoom out","View",()=>clk("zout"),"zout"],
+["KeyT",0,"T","Text weight","View",()=>clk("boost"),"boost"],
+["KeyD",0,"D","Dark pages on / off","View",()=>clk("pgmode",1),"pgmode"],
+["KeyK",0,"K","Notebook on / off","Notes",()=>clk("nbtgl"),"nbtgl"],
+["KeyL",0,"L","Notes list","Notes",()=>pop("n"),"rnotes"],
+["KeyY",0,"Y","Replies","Notes",()=>pop("c"),"rrepl"],
+["KeyP",0,"P","Pen","Draw",()=>clk("rpen"),"rpen"],
+["KeyA",0,"A","Eraser","Draw",()=>clk("rer"),"rer"],
+["KeyU",0,"U","Undo last stroke","Draw",()=>clk("rundo"),"rundo"],
+["KeyX",0,"X","Clear drawing on this page","Draw",()=>clk("rclr"),"rclr"],
+["Digit6",0,"6","Thin pen","Draw",()=>clk("rw1"),"rw1"],["Digit7",0,"7","Medium pen","Draw",()=>clk("rw2"),"rw2"],["Digit8",0,"8","Thick pen","Draw",()=>clk("rw3"),"rw3"],
+["Digit1",1,"Shift+1","Red pen","Draw",()=>clk("rcol1"),"rcol1"],["Digit2",1,"Shift+2","Blue pen","Draw",()=>clk("rcol2"),"rcol2"],["Digit3",1,"Shift+3","Green pen","Draw",()=>clk("rcol3"),"rcol3"],["Digit4",1,"Shift+4","Black pen","Draw",()=>clk("rcol4"),"rcol4"],["Digit5",1,"Shift+5","Yellow pen","Draw",()=>clk("rcol5"),"rcol5"],
+["KeyH",0,"H","Flashcards","Study",()=>pop("f"),"rcards"],
+["KeyR",0,"R","Progress and study timer","Study",()=>pop("p"),"bprog"],
+["KeyQ",0,"Q","Split view","Study",()=>pop("v"),"bsplit"],
+["Slash",0,"/","Show all shortcuts","Help",()=>help()]
+];
+const KEYS={};R.forEach(r=>{if(r[6])KEYS[r[6]]=r[2]});
+/* ---- listening: N is held, then another key ---- */
+let nAt=0;
+const editable=t=>t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+addEventListener("keydown",e=>{
+  if(e.key==="n"||e.key==="N"){if(!e.repeat&&!e.ctrlKey&&!e.metaKey&&!e.altKey)nAt=performance.now();return}
+  if(!nAt||e.key==="Tab"||e.key==="Shift"||e.ctrlKey||e.metaKey||e.altKey)return;
+  const ed=editable(e.target);if(ed&&performance.now()-nAt<130)return;   /* fast typing like "ns" is just typing */
+  const r=R.find(x=>(Array.isArray(x[0])?x[0].includes(e.code):x[0]===e.code)&&!!x[1]===e.shiftKey)||(e.code==="Slash"&&e.shiftKey?R[R.length-1]:null);
+  if(!r)return;
+  e.preventDefault();e.stopImmediatePropagation();
+  if(ed){try{   /* take back the "n" that was typed while reaching for the shortcut */
+    const t=e.target;let prev="";if("value" in t)prev=(t.value||"")[(t.selectionStart||0)-1]||"";else{const sl=getSelection();if(sl.anchorNode&&sl.anchorNode.nodeType===3)prev=sl.anchorNode.data[sl.anchorOffset-1]||""}
+    if(/n/i.test(prev))document.execCommand("delete")}catch(x){}}
+  r[5]();
+},true);
+addEventListener("keyup",e=>{if(e.key==="n"||e.key==="N")nAt=0},true);addEventListener("blur",()=>{nAt=0});
+/* ---- shortcut sheet ---- */
+function help(){
+  if($("nsc"))return $("nsc").remove();
+  const o=document.createElement("div");o.id="nsc";const g={};R.forEach(r=>(g[r[4]]=g[r[4]]||[]).push(r));
+  g["Books"]=[[0,0,"Tab","Switch to the next open book (hold N, tap Tab; Shift goes back)"]];
+  o.innerHTML='<div class="nb2"><h3>Keyboard shortcuts</h3><p>Hold <kbd>N</kbd>, then press the key. Every shortcut starts with N.</p><div class="ng">'+Object.keys(g).map(k=>`<section><h4>${k}</h4>${g[k].map(r=>`<div><kbd>N</kbd>+<kbd>${r[2]}</kbd><span>${r[3]}</span></div>`).join("")}</section>`).join("")+'</div></div>';
+  o.onclick=e=>{if(e.target===o)o.remove()};document.body.append(o);
+  const esc=e=>{if(e.key==="Escape"){o.remove();removeEventListener("keydown",esc,true)}};addEventListener("keydown",esc,true);
+}
+const st=document.createElement("style");st.textContent=`#nsc{position:fixed;inset:0;z-index:300;background:rgba(10,14,30,.5);display:flex;align-items:center;justify-content:center;animation:fadeIn .2s ease}
+#nsc .nb2{width:min(860px,94vw);max-height:88vh;overflow:auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:16px;box-shadow:var(--sh);padding:22px;animation:boxIn .3s var(--spring) both}
+#nsc h3{margin:0 0 2px;font:500 24px var(--serif,Georgia,serif)}#nsc p{margin:0 0 14px;color:var(--mute)}
+#nsc .ng{columns:3 230px;column-gap:26px}#nsc section{break-inside:avoid;margin:0 0 14px}#nsc h4{margin:0 0 4px;font:700 12px var(--ui);letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+#nsc section>div{display:flex;gap:8px;align-items:baseline;padding:2px 0;font-size:13px}#nsc section>div span{color:var(--mute);margin-left:auto;text-align:right}
+#nsc kbd{font:600 11px var(--ui);padding:2px 6px;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;background:var(--hover)}`;document.head.append(st);
+
+/* ---- tooltips: what each control does now, with its shortcut ---- */
+const AUTO={
+ on:"AutoSave is ON.\nYour .mar book is saved by itself 5 minutes after you make a change, and the previous version is added to its history.\nClick to turn it off.",
+ new:"AutoSave starts after your first Save.\nPress Save once to create your .mar book (it holds the PDF, your notes, notebook, drawings and history). After that AutoSave keeps it up to date.\nClick to do that now.",
+ off:"AutoSave is OFF.\nNothing is written until you press Save.\nClick to turn it on.",
+ perm:"AutoSave needs permission.\nThe browser must allow this app to write to the book's file. Click to allow it.",
+ nofile:"AutoSave is off for this book.\nIt was opened without a link to its file (for example by drag and drop). Click to see how to turn it on.",
+ none:"AutoSave\nOpen a book to use it."};
+const BASE={
+ tgl:"Contents pane\nShow or hide the left pane with this book's table of contents. While the pane is hidden, the logo shows here.",
+ tlogo:"Marginalia",
+ title:"The book you are reading. Click a tab under the title bar to switch books.",
+ "rt-home":"Home\nOpen and close books, restore earlier versions, go to a page, search and bookmarks.",
+ "rt-view":"View\nZoom, text weight and dark pages.",
+ "rt-notes":"Notes\nTurn the notebook on or off, open the notes list and replies.",
+ "rt-draw":"Draw\nPen, eraser, colours, widths, undo and clear on the current page.",
+ "rt-study":"Study\nFlashcards from your highlights, reading progress and timer, split view.",
+ rpin:"Keep the action panel open\nOff: the panel closes after you choose an action, click elsewhere or press Esc.\nOn: it stays open until you turn this off.",
+ bexport:"Export\nExport your notes or your notebook as an HTML page that keeps your fonts and formatting, copy quotes with citations, or share one colour as a smaller .mar.",
+ savepdf:"Save\nWrites the PDF with your highlights, notes (and replies), notebook, drawings and bookmarks into your .mar book. The previous version is kept in its history: the last 3 travel inside the file.",
+ who:"Your name\nPrinted on every note and reply you write. Click to change it.",
+ theme:"Dark / light mode\nSwitches the whole app. In dark mode the PDF pages turn dark too (see Dark pages).",
+ open:"Open\nOpen a PDF or a Marginalia .mar book. Pick several files to open them all in tabs. The picker starts in the folder you used last.",
+ closebk:"Close book\nCloses the book on screen. If it has unsaved changes you can save or discard them first.",
+ brest:"Versions\nShows the last 3 saved versions kept inside the .mar file (so they appear on any computer) and the automatic backup of unsaved work on this computer. Restore any of them.",
+ prev:"Previous page\nGo up one page.",next:"Next page\nGo down one page.",
+ pg:"Page number\nType a page and press Enter to jump straight to it.",
+ bsearch:"Search\nFind words in the book, your notes and your notebook pages. Recent searches are remembered.",
+ bbm:"Bookmarks\nSave the page you are on with a label and jump back to any bookmark.",
+ zout:"Zoom out\nMake the pages smaller. Ctrl + mouse wheel, trackpad pinch or a two-finger pinch also work.",
+ zin:"Zoom in\nMake the pages bigger. Ctrl + mouse wheel, trackpad pinch or a two-finger pinch also work.",
+ zl:"Current zoom level",
+ nbtgl:"Notebook\nShow a ruled notebook page beside every PDF page for your own writing. Turning it off hides the pages but keeps your text.",
+ rnotes:"Notes list\nEvery highlight with its note, grouped by colour heading. Filter by colour and click a note to jump to it.",
+ rrepl:"Replies\nRead and add replies to notes. Each reply shows who wrote it and when.",
+ rpen:"Pen\nDraw or write on the page with a mouse, finger or stylus. Turn it off to select text and open highlights again.",
+ rer:"Eraser\nRemove the pen strokes you touch.",
+ rundo:"Undo stroke\nRemoves the last stroke you drew on this page.",
+ rclr:"Clear page\nRemoves all drawing on this page (asks first).",
+ rcol1:"Red pen",rcol2:"Blue pen",rcol3:"Green pen",rcol4:"Black pen",rcol5:"Yellow pen",
+ rw1:"Thin pen\nFine lines for small writing.",rw2:"Medium pen\nGood for everyday writing and underlining.",rw3:"Thick pen\nBold strokes for emphasis.",
+ rcards:"Flashcards\nTurn your highlights and notes into cards and test yourself.",
+ bprog:"Progress\nSee how much of the book you have read and use the study timer.",
+ bsplit:"Split view\nOpen a reference pane next to the page you are reading."};
+const BYTITLE={
+ "Bold (Ctrl+B)":"Bold (Ctrl+B)\nMake the selected text bold.","Italic (Ctrl+I)":"Italic (Ctrl+I)\nSlant the selected text.","Underline (Ctrl+U)":"Underline (Ctrl+U)\nUnderline the selected text.",
+ "Strikethrough":"Strikethrough\nDraw a line through the selected text.",
+ "Bullet list (or type - then space)":"Bullet list\nStart or stop a bulleted list. Typing \"- \" at the start of a line does the same.",
+ "Numbered list (or type 1. then space)":"Numbered list\nStart or stop a numbered list. Typing \"1. \" at the start of a line does the same.",
+ "Outdent (Shift+Tab)":"Outdent (Shift+Tab)\nMove the list item out one level.","Indent (Tab)":"Indent (Tab)\nMove the list item in one level.",
+ "Heading":"Heading\nTurn the line into a heading. Click again to turn it back.","Text colour":"Text colour\nColour the selected text with the colour shown.","Highlight colour":"Highlight colour\nPut a marker colour behind the selected text.",
+ "Clear formatting":"Clear formatting\nRemove bold, colours and other styling from the selected text.",
+ "Insert picture (you can also paste or drop one)":"Insert picture\nAdd an image from your device. You can also paste or drop one into the text.",
+ "Remove the picture you clicked on (or click it and press Delete)":"Remove picture\nDeletes the picture you clicked on (or click it and press Delete).",
+ "Delete highlight and note":"Delete highlight and note\nRemoves this highlight together with its note and replies.",
+ "Edit note colours and headings":"Edit colours and headings\nRename, add (up to 12), recolour or remove this book's note colours. A colour's name is the heading its notes are grouped under in the notes list and exports.",
+ "Pick a colour":"Highlight colour\nChoose the colour of this highlight. It also decides which heading the note is grouped under.",
+ "Remove this colour":"Remove this colour\nNotes in this colour move to \"Other\".","Remove":"Remove",
+ "Close":"Close note (Esc)\nYour changes are kept automatically.","Close this book":"Close this book\nAsks about unsaved changes first.",
+ "Student name shown on your notes":"Your name\nPrinted on every note and reply you write. Click to change it.",
+ "You can open either a PDF file or a Marginalia book (.mar) file":"Open a PDF or a Marginalia .mar book to start reading.",
+ "Open another book. You can open either a PDF file or a Marginalia book (.mar) file":"Open another book\nA PDF or a .mar book opens in a new tab. You can pick several files at once.",
+ "Notebook page beside every PDF page":BASE.nbtgl};
+const key=id=>KEYS[id]?`\n⌨ Shortcut: N+${KEYS[id]}`:"";
+function want(el,t){
+  if(t&&t.includes("⌨"))return null;const id=el.id;let b;
+  if(id==="autosv")b=AUTO[el.dataset.st]||AUTO.none;
+  else if(id==="boost"){const m=/Text darkness: (\w+(?: \w+)?)/.exec(t||"");const lv=m?m[1]:"Normal";b=`Text weight: ${lv}\nClick to cycle Normal, Bold, Extra bold. Heavier text is easier to read when the PDF's lettering is thin or faint.`}
+  else if(id==="pgmode"){const on=/: on/.test(t||"");b=`Dark pages: ${on?"on":"off"}\nIn dark mode the PDF page itself turns dark with light text${on?". Click to keep pages white instead (better for pictures).":". Click to turn this on."}`}
+  else if(id&&BASE[id]!==undefined)b=BASE[id];
+  else if(t&&BYTITLE[t])b=BYTITLE[t];
+  else return null;
+  const out=b+key(id);return out===t?null:out}
+function fix(el){if(!el||!el.getAttribute)return;const w=want(el,el.getAttribute("title"));if(w!=null)el.setAttribute("title",w)}
+function sweep(root){if(!root||root.nodeType!==1)return;fix(root);root.querySelectorAll("[id],[title]").forEach(fix)}
+const mo=new MutationObserver(ms=>ms.forEach(m=>{if(m.type==="attributes")fix(m.target);else m.addedNodes.forEach(sweep)}));
+["bar","note","tl","btabs","drawer"].forEach(i=>{const r=$(i);if(r)mo.observe(r,{subtree:true,childList:true,attributes:true,attributeFilter:["title"]})});
+mo.observe(document.body,{childList:true});
+sweep(document.body);
+window.MGK={R,KEYS,help};
+})();
+
+/* ===== Onboarding tour: starts on a first visit, can be skipped, and restarted from the ? button (or "Take the quick tour" on the start screen) ===== */
+(()=>{
+const KEY="marginalia-tour-done",$$=i=>document.querySelector(i);
+const STEPS=[
+ {t:"Welcome to Marginalia",x:"Read a PDF, highlight it, take notes, and keep everything together in one <b>.mar</b> book you can share. This 1-minute tour shows the main places."},
+ {t:"Open a book",s:"#open2|#rtabs",x:"Press <b>Open a book</b> to choose a PDF or a .mar book. You can also drag a file onto the window."},
+ {t:"The tabs",s:"#rtabs",x:"<b>Home, View, Notes, Draw</b> and <b>Study</b> hold the tools. Click a tab to open its panel: Search and Bookmarks are in Home, the pen is in Draw, flashcards and the study timer are in Study."},
+ {t:"Highlight and take notes",x:"Select any text in the PDF and pick a colour. A note window opens: write your note, reply to it, or copy a citation. Click a highlight later to reopen its note."},
+ {t:"Notebook pages",s:"#rtabs",x:"In the <b>Notes</b> tab, turn on <b>Notebook</b> to get a ruled page beside every PDF page for your own summary. You can paste from Word and add pictures."},
+ {t:"Save your book",s:"#savepdf",x:"Press <b>Save</b>. The first time, you choose where to create your .mar file. Your original PDF is never changed. Share the .mar file and the other person gets the PDF and all your notes."},
+ {t:"AutoSave",s:"#autosv",x:"After the first Save, <b>AutoSave</b> saves your book 5 minutes after a change (Chrome and Edge on a computer). An amber glow means it needs your attention."},
+ {t:"Make it yours",s:"#who,#theme",x:"Add your <b>name</b> so your notes show who wrote them, and switch between <b>light and dark</b>. Hold <b>N</b> and press a key for keyboard shortcuts."},
+ {t:"You're ready",s:"#tourbtn",x:"That's it. You can replay this tour any time with the <b>?</b> button in the top bar."}
+];
+const st=document.createElement("style");st.textContent=`#tourov{position:fixed;inset:0;z-index:100000}#tourhl{position:fixed;border-radius:12px;box-shadow:0 0 0 9999px rgba(8,10,25,.62),0 0 0 3px var(--acc);transition:all .28s ease;pointer-events:none}
+#tourcard{position:fixed;width:min(340px,calc(100vw - 24px));background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:14px;box-shadow:var(--sh);padding:16px 16px 12px;font:14px/1.45 var(--ui);transition:top .28s ease,left .28s ease}
+#tourcard h3{margin:0 0 6px;font:700 16px var(--ui)}#tourcard p{margin:0 0 12px}#tourcard .tf{display:flex;align-items:center;gap:6px}#tourcard .tf i{flex:1;font-style:normal;color:var(--mute);font-size:12px}
+#tourcard button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:8px;padding:7px 12px;font:600 13px var(--ui);cursor:pointer}#tourcard button.pri{background:var(--acc);color:var(--on);border-color:transparent}#tourcard button.skip{border:0;color:var(--mute);padding:7px 4px}
+#tourcard .dots{display:flex;gap:4px;margin-bottom:10px}#tourcard .dots b{width:7px;height:7px;border-radius:50%;background:var(--line)}#tourcard .dots b.on{background:var(--acc)}
+#tourbtn{font-weight:700}#empty button.tourlink{display:block;margin:16px auto 0;background:none;color:var(--acc);border:0;border-radius:8px;padding:6px 12px;font:600 13px var(--ui);text-decoration:underline;cursor:pointer}#empty button.tourlink:hover{background:var(--hover)}`;document.head.append(st);
+let ov,hl,card,i=0;
+const seen=()=>{try{return localStorage.getItem(KEY)==="1"}catch(e){return window._tourSeen}};
+const mark=()=>{try{localStorage.setItem(KEY,"1")}catch(e){window._tourSeen=true}};
+function target(sel){if(!sel)return null;
+  for(const alt of sel.split("|")){const rs=alt.split(",").map(q=>{const e=$$(q);return e&&e.getBoundingClientRect()}).filter(r=>r&&r.width>4&&r.height>4);
+    if(rs.length){const l=Math.min(...rs.map(r=>r.left)),t=Math.min(...rs.map(r=>r.top)),rr=Math.max(...rs.map(r=>r.right)),b=Math.max(...rs.map(r=>r.bottom));return{left:l,top:t,right:rr,bottom:b,width:rr-l,height:b-t}}}
+  return null}
+function show(){const S=STEPS[i],r=target(S.s),W=innerWidth,H=innerHeight;
+  card.innerHTML=`<div class="dots">${STEPS.map((_,k)=>`<b class="${k===i?"on":""}"></b>`).join("")}</div><h3>${S.t}</h3><p>${S.x}</p><div class="tf"><button class="skip" id="tskip">Skip tour</button><i>${i+1} of ${STEPS.length}</i>${i?'<button id="tback">Back</button>':""}<button class="pri" id="tnext">${i===STEPS.length-1?"Done":"Next"}</button></div>`;
+  $$("#tskip").onclick=end;$$("#tnext").onclick=()=>i===STEPS.length-1?end():(i++,show());if(i)$$("#tback").onclick=()=>{i--;show()};$$("#tnext").focus();
+  const cw=Math.min(340,W-24);
+  if(r){hl.style.display="block";Object.assign(hl.style,{left:r.left-6+"px",top:r.top-6+"px",width:r.width+12+"px",height:r.height+12+"px"});
+    const ch=card.offsetHeight,below=r.bottom+ch+24<H;card.style.top=(below?r.bottom+16:Math.max(12,r.top-ch-16))+"px";card.style.left=Math.max(12,Math.min(r.left+r.width/2-cw/2,W-cw-12))+"px"}
+  else{hl.style.display="none";const ch=card.offsetHeight;card.style.top=Math.max(12,(H-ch)/2)+"px";card.style.left=(W-cw)/2+"px"}}
+function key(e){if(e.key==="Escape"){e.stopPropagation();end()}else if(e.key==="ArrowRight"||e.key==="Enter"){e.preventDefault();e.stopPropagation();i<STEPS.length-1?(i++,show()):end()}else if(e.key==="ArrowLeft"&&i){e.preventDefault();e.stopPropagation();i--;show()}}
+function end(){mark();if(ov)ov.remove();ov=null;document.removeEventListener("keydown",key,true);removeEventListener("resize",rs)}
+const rs=()=>ov&&show();
+function start(){if(ov)return;try{window.MG&&MG.box&&(MG.box.style.display="none")}catch(e){}i=0;ov=document.createElement("div");ov.id="tourov";hl=document.createElement("div");hl.id="tourhl";card=document.createElement("div");card.id="tourcard";card.setAttribute("role","dialog");card.setAttribute("aria-label","Marginalia tour");ov.append(hl,card);document.body.append(ov);document.addEventListener("keydown",key,true);addEventListener("resize",rs);show()}
+/* restart: a ? button in the top bar and a link on the start screen */
+const b=document.createElement("button");b.id="tourbtn";b.textContent="?";b.title="Take the quick tour again";b.setAttribute("aria-label","Take the quick tour");b.onclick=start;
+const th=$$("#theme");if(th)th.before(b);
+const em=$$("#empty");if(em){const l=document.createElement("button");l.className="tourlink";l.textContent="Take the quick tour";l.onclick=start;em.append(l)}
+window.startTour=start;
+if(!seen())setTimeout(()=>{if(!seen())start()},900);
 })();
 </script>
 </body>

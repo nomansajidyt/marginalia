@@ -6,7 +6,7 @@ Marginalia is a PDF reader for studying. You highlight text, attach notes to the
 
 It is one self-contained HTML file. There is nothing to install and no account. Your files never leave your device.
 
-*This document describes version 47.*
+*This document describes version 52.*
 
 ---
 
@@ -14,33 +14,36 @@ It is one self-contained HTML file. There is nothing to install and no account. 
 
 1. [Quick start](#quick-start)
 2. [The top bar at a glance](#the-top-bar-at-a-glance)
-3. [Opening books](#opening-books)
-4. [Saving, AutoSave and the `.mar` book](#saving-autosave-and-the-mar-book)
-5. [Reading](#reading)
-6. [Searching the book](#searching-the-book)
-7. [Bookmarks](#bookmarks)
-8. [Highlights and notes](#highlights-and-notes)
-9. [Notebook pages](#notebook-pages)
-10. [Formatting, pasting from Word, and pictures](#formatting-pasting-from-word-and-pictures)
-11. [Drawing on pages](#drawing-on-pages)
-12. [Split view](#split-view)
-13. [Studying: flashcards, progress and the study timer](#studying-flashcards-progress-and-the-study-timer)
-14. [Exporting and sharing notes](#exporting-and-sharing-notes)
-15. [Backups and earlier versions](#backups-and-earlier-versions)
-16. [Working with several books](#working-with-several-books)
-17. [Appearance settings](#appearance-settings)
-18. [Keyboard shortcuts](#keyboard-shortcuts)
-19. [Browser and device support](#browser-and-device-support)
-20. [The `.mar` file format](#the-mar-file-format)
-21. [Large files](#large-files)
-22. [Where your data is stored](#where-your-data-is-stored)
-23. [Hosting it on GitHub Pages](#hosting-it-on-github-pages)
-24. [Limitations](#limitations)
-25. [What's new since version 35](#whats-new-since-version-35)
+3. [The quick tour](#the-quick-tour)
+4. [Opening books](#opening-books)
+5. [Saving, AutoSave and the `.mar` book](#saving-autosave-and-the-mar-book)
+6. [Reading](#reading)
+7. [Searching the book](#searching-the-book)
+8. [Bookmarks](#bookmarks)
+9. [Highlights and notes](#highlights-and-notes)
+10. [Notebook pages](#notebook-pages)
+11. [Formatting, pasting from Word, and pictures](#formatting-pasting-from-word-and-pictures)
+12. [Drawing on pages](#drawing-on-pages)
+13. [Split view](#split-view)
+14. [Studying: flashcards, progress and the study timer](#studying-flashcards-progress-and-the-study-timer)
+15. [Exporting and sharing notes](#exporting-and-sharing-notes)
+16. [Backups and earlier versions](#backups-and-earlier-versions)
+17. [Working with several books](#working-with-several-books)
+18. [Appearance settings](#appearance-settings)
+19. [Keyboard shortcuts](#keyboard-shortcuts)
+20. [Browser and device support](#browser-and-device-support)
+21. [The `.mar` file format](#the-mar-file-format)
+22. [Large files](#large-files)
+23. [Where your data is stored](#where-your-data-is-stored)
+24. [Hosting it on GitHub Pages](#hosting-it-on-github-pages)
+25. [Limitations](#limitations)
+26. [What's new since version 35](#whats-new-since-version-35)
 
 ---
 
 ## Quick start
+
+> **First time here?** A short guided tour starts by itself on your first visit. Press **Skip tour** to close it, or **Esc**. You can replay it any time with the **?** button in the top bar.
 
 1. Open the app and click **Open a book**.
 2. Choose a PDF (or a `.mar` book).
@@ -74,6 +77,7 @@ From left to right:
 | Right | **Aa** | Text darkness. |
 | Right | **◐** | Dark or white PDF pages in dark mode. |
 | Right | **Person** | Your [student name](#student-name). |
+| Right | **?** | Replay the [quick tour](#the-quick-tour). |
 | Right | **Moon / sun** | Light or dark theme. |
 | Right | **Save** | Save the book. A dot on it means there are unsaved changes. |
 | Right | **▾** | [Backups and earlier versions](#backups-and-earlier-versions). |
@@ -81,6 +85,18 @@ From left to right:
 The study buttons (✎ ◫ ⏱ 🔍 🔖 ▾) each open one small panel directly under the button you pressed. Press the same button again, click outside the panel, or press **Esc** to close it.
 
 On phones the top bar scrolls sideways, and a few buttons are hidden to save space (title, zoom, previous/next, close, Aa, ◐, AutoSave and Notebook).
+
+---
+
+## The quick tour
+
+Marginalia has a short interactive tour (9 steps) that highlights the main buttons one at a time: opening a book, the tabs, highlighting and notes, notebook pages, Save, AutoSave, and your name and theme.
+
+* **It starts by itself** the first time you open the app in a browser.
+* **Skip tour** (bottom left of the tour card) or **Esc** closes it at any step. The app remembers that you have seen it, so it does not start again by itself.
+* **Next / Back** move between steps. You can also use the **Right / Left arrow keys**.
+* **To restart it:** press the **?** button in the top bar, or the **Take the quick tour** link on the start screen (when no book is open).
+* The tour is remembered per browser. If you clear the site's data, it starts again on your next visit.
 
 ---
 
@@ -579,6 +595,7 @@ Direct saving into files needs a secure address (`https://` or `localhost`). If 
 
 **New features**
 
+* **Quick tour** for first-time visitors, with Skip tour and a **?** button to replay it.
 * **Search** across the PDF text, your notes and your notebook pages, with recent searches and blinking matches.
 * **Bookmarks** with optional labels.
 * **Drawing** on pages: pen, five colours, three thicknesses, eraser, undo and clear page.
