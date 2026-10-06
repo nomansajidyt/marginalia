@@ -6,7 +6,7 @@ Marginalia is a PDF reader for studying. You highlight text, attach notes to the
 
 It is one self-contained HTML file. There is nothing to install and no account. Your files never leave your device.
 
-*This document describes version 47.*
+*This document describes version 52.*
 
 ---
 
