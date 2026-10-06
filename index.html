@@ -238,7 +238,7 @@ html[data-theme=dark]{--nbpaper:#1f2233;--nbline:#2d3250;--nbink:#e8eaf6;--nbmar
 .fbar button:hover,.fbar .cw:hover{background:var(--hover)}
 .fbar .sp{width:1px;height:20px;background:var(--line);margin:0 4px}
 .fbar .cw input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-.fbar .cw i{position:absolute;left:8px;right:8px;bottom:5px;height:3px;border-radius:2px}
+.fbar .cw i{position:absolute;left:8px;right:8px;bottom:2px;height:3px;border-radius:2px}
 .fbar.inpop{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:2px;margin-bottom:8px;padding:4px;background:var(--hover);border-radius:10px}
 .fbar.inpop button:hover,.fbar.inpop .cw:hover{background:var(--line)}
 @media(pointer:coarse){.fbar button,.fbar .cw{min-width:38px;height:38px}}
@@ -374,6 +374,7 @@ body.nobk #rpanel .rg:not(.keep){opacity:.4;pointer-events:none}
 :root{accent-color:var(--acc)}
 ::selection{background:color-mix(in srgb,var(--acc) 30%,transparent)}
 html[data-theme=dark] ::selection{background:color-mix(in srgb,var(--acc) 45%,transparent)}
+#tl .r svg{display:inline-block;vertical-align:-4px;margin-right:4px}#tl .x svg{width:14px;height:14px}#lkp .x svg{width:16px;height:16px}#lkp .g{display:flex;align-items:center;justify-content:center;gap:6px}#sp button{display:inline-flex;align-items:center;justify-content:center}#sp svg{width:16px;height:16px}
 </style>
 </head>
 <body>
@@ -403,8 +404,8 @@ html[data-theme=dark] ::selection{background:color-mix(in srgb,var(--acc) 45%,tr
       <div class="grp r">
         <button id="nbtgl" title="Notebook page beside every PDF page" aria-pressed="false"></button>
         <button id="autosv" class="aspill" role="switch" aria-checked="false" data-st="none" disabled><span class="al">AutoSave</span><i class="sw"><i></i></i><b>Off</b></button>
-        <button id="boost"><b>Aa</b></button>
-        <button id="pgmode"><b>◐</b></button>
+        <button id="boost" data-ic="textsize"></button>
+        <button id="pgmode" data-ic="halfdark"></button>
         <button id="who" title="Student name shown on your notes"></button>
         <button id="theme" title="Light / dark" data-ic="moon"></button>
         <button id="savepdf" class="go" title="Save the PDF and all your notes into your .mar book. AutoSave does this every 5 minutes.">Save</button>
@@ -416,15 +417,15 @@ html[data-theme=dark] ::selection{background:color-mix(in srgb,var(--acc) 45%,tr
     <div id="lbar"><i></i></div>
     <div id="autoPop"></div>
     <div id="nbtool" class="fbar">
-      <button data-c="bold" title="Bold (Ctrl+B)"><b>B</b></button><button data-c="italic" title="Italic (Ctrl+I)"><i>I</i></button><button data-c="underline" title="Underline (Ctrl+U)"><u>U</u></button><button data-c="strikeThrough" title="Strikethrough"><s>S</s></button>
+      <button data-c="bold" title="Bold (Ctrl+B)" data-ic="bold"></button><button data-c="italic" title="Italic (Ctrl+I)" data-ic="italic"></button><button data-c="underline" title="Underline (Ctrl+U)" data-ic="underline"></button><button data-c="strikeThrough" title="Strikethrough" data-ic="strike"></button>
       <span class="sp"></span>
-      <button data-c="insertUnorderedList" title="Bullet list (or type - then space)">• List</button><button data-c="insertOrderedList" title="Numbered list (or type 1. then space)">1. List</button><button data-c="outdent" title="Outdent (Shift+Tab)">⇤</button><button data-c="indent" title="Indent (Tab)">⇥</button>
+      <button data-c="insertUnorderedList" title="Bullet list (or type - then space)" data-ic="ul"></button><button data-c="insertOrderedList" title="Numbered list (or type 1. then space)" data-ic="ol"></button><button data-c="outdent" title="Outdent (Shift+Tab)" data-ic="outdent"></button><button data-c="indent" title="Indent (Tab)" data-ic="indent"></button>
       <span class="sp"></span>
-      <button data-c="formatBlock" data-a="H3" title="Heading">H</button>
-      <label class="cw" title="Text colour">A<i style="background:#c0392b"></i><input type="color" data-k="foreColor" value="#c0392b"></label>
-      <label class="cw" title="Highlight colour">▮<i style="background:#ffe14d"></i><input type="color" data-k="hiliteColor" value="#ffe14d"></label>
-      <button data-img="1" title="Insert picture (you can also paste or drop one)">🖼 Image</button><button data-rm="1" title="Remove the picture you clicked on (or click it and press Delete)">✕ Image</button>
-      <button data-c="removeFormat" title="Clear formatting">Clear</button>
+      <button data-c="formatBlock" data-a="H3" title="Heading" data-ic="heading"></button>
+      <label class="cw" title="Text colour"><span data-ic="tcol"></span><i style="background:#c0392b"></i><input type="color" data-k="foreColor" value="#c0392b"></label>
+      <label class="cw" title="Highlight colour"><span data-ic="hilite"></span><i style="background:#ffe14d"></i><input type="color" data-k="hiliteColor" value="#ffe14d"></label>
+      <button data-img="1" title="Insert picture (you can also paste or drop one)" data-ic="image"></button><button data-rm="1" title="Remove the picture you clicked on (or click it and press Delete)" data-ic="imgx"></button>
+      <button data-c="removeFormat" title="Clear formatting" data-ic="clearfmt"></button>
     </div>
     <div id="viewer" tabindex="0"><div id="stage">
       <div id="empty"><svg class="elogo" viewBox="0 0 48 48" width="56" height="56"><rect width="48" height="48" rx="12" style="fill:var(--logo,#3a4bd8)"/><path d="M14 9h14l8 8v22a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2V11a2 2 0 0 1 2-2z" fill="#fff"/><path d="M28 9l8 8h-6a2 2 0 0 1-2-2z" style="fill:var(--logo,#3a4bd8)" fill-opacity=".3"/><rect x="17" y="21" width="12" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)" fill-opacity=".45"/><rect x="15.5" y="26" width="19" height="6.4" rx="2.2" style="fill:var(--logo,#3a4bd8)" fill-opacity=".22"/><rect x="17.5" y="27.9" width="14" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)"/><rect x="17" y="35.5" width="9" height="2.6" rx="1.3" style="fill:var(--logo,#3a4bd8)" fill-opacity=".45"/></svg><h2>Read it. Mark it. Keep it in one book.</h2><p>Your highlights, notes and notebooks are saved together with the PDF in a single .mar book, so you can share just one file.</p><button id="open2" title="You can open either a PDF file or a Marginalia book (.mar) file">Open a book</button></div>
@@ -445,6 +446,40 @@ const WORKER="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.
 const IC={menu:'<path d="M4 6h16M4 12h10M4 18h16"/>',left:'<path d="M15 5l-7 7 7 7"/>',right:'<path d="M9 5l7 7-7 7"/>',minus:'<path d="M5 12h14"/>',plus:'<path d="M12 5v14M5 12h14"/>',moon:'<path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/>',trash:'<path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',open:'<path d="M3 7h6l2 2h10v10H3z"/>',user:'<path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c1-4 4-6 8-6s7 2 8 6"/>'};
 IC.nb='<path d="M6 3h12a1 1 0 011 1v16a1 1 0 01-1 1H6a1 1 0 01-1-1V4a1 1 0 011-1zM9 3v18M12.5 8h3.5M12.5 12h3.5"/>';
 IC.gear='<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/>';
+IC.pen='<path d="M4 20l1-4L16 5a2 2 0 013 3L8 19z"/><path d="M14 7l3 3"/>';
+IC.eraser='<path d="M20 20H9l-5-5a2 2 0 010-3L13 3a2 2 0 013 0l4 4a2 2 0 010 3l-8 8"/><path d="M7 11l6 6"/>';
+IC.undo='<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/>';
+IC.notelist='<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M14 3v5h5"/>';
+IC.cards='<rect x="3" y="7" width="14" height="12" rx="2"/><path d="M7 7V5a2 2 0 012-2h10a2 2 0 012 2v10a2 2 0 01-2 2h-2"/>';
+IC.reply='<path d="M4 5h16v11H9l-5 4z"/>';
+IC.corner='<path d="M5 4v8a3 3 0 003 3h11M15 11l4 4-4 4"/>';
+IC.split='<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/>';
+IC.timer='<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>';
+IC.search='<circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/>';
+IC.bookmark='<path d="M6 3h12v18l-6-4-6 4z"/>';
+IC.versions='<path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.5M3 4v4h4"/><path d="M12 8v4l3 2"/>';
+IC.export='<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>';
+IC.pin='<path d="M9 3h6l-1 6 4 4H6l4-4zM12 13v8"/>';
+IC.help='<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 115 0c0 1.7-2.5 2-2.5 4M12 17h.01"/>';
+IC.palette='<path d="M12 3a9 9 0 100 18c1.5 0 2-1 1.5-2-.6-1.2.2-2.5 1.5-2.5H17a4 4 0 004-4c0-5-4-9.5-9-9.5z"/><path d="M7.5 11h.01M10 7h.01M15 7h.01"/>';
+IC.image='<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M21 16l-5-5-8 9"/>';
+IC.imgx='<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 9l6 6M15 9l-6 6"/>';
+IC.ul='<path d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01"/>';
+IC.ol='<path d="M10 6h10M10 12h10M10 18h10M4 5l1-1v4M4 14h2l-2 3h2"/>';
+IC.outdent='<path d="M20 5H4M20 19H4M20 12h-9M7 9l-3 3 3 3"/>';
+IC.indent='<path d="M20 5H4M20 19H4M20 12h-9M4 9l3 3-3 3"/>';
+IC.heading='<path d="M6 4v16M18 4v16M6 12h12"/>';
+IC.bold='<path d="M7 4h6a4 4 0 010 8H7zM7 12h7a4 4 0 010 8H7z"/>';
+IC.italic='<path d="M14 4h-4M14 20h-4M15 4L9 20"/>';
+IC.underline='<path d="M7 4v7a5 5 0 0010 0V4M5 21h14"/>';
+IC.strike='<path d="M5 12h14M16 6.5C15 5 13.5 4.5 12 4.5c-2.5 0-4 1.2-4 3 0 4 8 2.5 8 7 0 1.8-1.8 3-4 3-1.8 0-3.5-.7-4.5-2.2"/>';
+IC.tcol='<path d="M6 17l6-13 6 13M8.5 12h7"/>';
+IC.hilite='<path d="M15 4l5 5-9 9-5-5zM6 13l-2 5 2 2h5"/>';
+IC.clearfmt='<path d="M5 5h14M12 5v6M8 20l3-9M14 14l5 5M19 14l-5 5"/>';
+IC.textsize='<path d="M3 19L8 6l5 13M5 14h6M15 19l3-8 3 8M16 17h4"/>';
+IC.halfdark='<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 010 18z" fill="currentColor"/>';
+IC.clock='<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>';
+IC.ext='<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/>';
 const svg=k=>`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
 document.querySelectorAll("[data-ic]").forEach(b=>b.innerHTML=svg(b.dataset.ic));
 
@@ -847,7 +882,7 @@ function tree(items,d){
   const ul=mk("ul");
   items.forEach(it=>{
     const li=mk("li"),row=mk("div","trow");row.style.paddingLeft=(6+d*16)+"px";
-    const tg=mk("button","tg",it.items&&it.items.length?"▸":"");
+    const tg=mk("button","tg",it.items&&it.items.length?svg("right"):"");
     const a=mk("button","tl");a.textContent=it.title||"Untitled";a.onclick=()=>{hidePeek();gotoDest(it.dest);closeSmall()};
     a.onmouseenter=()=>{clearTimeout(pkH);clearTimeout(pkT);pkT=setTimeout(()=>showPeek(a,it.dest),180)};a.onmouseleave=()=>{clearTimeout(pkT);schedHide()};
     row.append(tg,a);li.append(row);
@@ -1526,7 +1561,7 @@ const st=document.createElement("style");st.textContent=`#tl{position:fixed;top:
 const box=document.createElement("div");box.id="tl";box.innerHTML='<div class="th"><button data-t="n">Notes list</button><button data-t="s">Search</button><button data-t="b">Bookmarks</button><button data-t="f">Cards</button><button data-t="d">Draw</button><button data-t="v">Split</button><button data-t="c">Comments</button><button data-t="p">Progress</button><button data-t="r">Restore</button><button data-t="e">Export</button></div><div class="tb"></div>';document.body.append(box);
 const tb=box.querySelector(".tb"),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let tab="s",tok=0;
-const replyHtml=r=>`↳ <b>${esc(r.a)}</b>${r.d?` <span class="rd">· ${stamp(r.d)}</span>`:""}<div class="rt">${esc(r.t)}</div>`;
+const replyHtml=r=>`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px"><path d="M5 4v8a3 3 0 003 3h11M15 11l4 4-4 4"/></svg> <b>${esc(r.a)}</b>${r.d?` <span class="rd">· ${stamp(r.d)}</span>`:""}<div class="rt">${esc(r.t)}</div>`;
 const go=p=>{goTo(p);if(innerWidth<700)box.style.display="none"};
 const snip=(t,i,q)=>{const a=Math.max(0,i-40),z=Math.min(t.length,i+q.length+60);return(a?"…":"")+esc(t.slice(a,i))+"<mark>"+esc(t.slice(i,i+q.length))+"</mark>"+esc(t.slice(i+q.length,z))+(z<t.length?"…":"")};
 async function pageText(b,i){b._tx=b._tx||{};if(b._tx[i]==null){const c=await(await b.pdf.getPage(i)).getTextContent();b._tx[i]=c.items.map(x=>x.str).join(" ").replace(/\s+/g," ")}return b._tx[i]}
@@ -1550,13 +1585,13 @@ function draw(){
   if(tab==="n"){tb.append(document.getElementById("nl"));refreshList();return}
   if(tab==="s"){
     const i=document.createElement("input");i.placeholder="Search text, notes and notebooks…";const info=document.createElement("small"),out=document.createElement("div");info.style.cssText="display:block;margin-top:6px;color:var(--mute)";tb.append(i,info,out);i.focus();
-    const showRec=()=>{out.innerHTML="";const r=getRec();info.textContent=r.length?"Recent searches":"";r.forEach(w=>{const d=document.createElement("div");d.className="r";d.textContent="🕘 "+w;d.onclick=()=>{i.value=w;search(w,out,info)};out.append(d)})};showRec();
+    const showRec=()=>{out.innerHTML="";const r=getRec();info.textContent=r.length?"Recent searches":"";r.forEach(w=>{const d=document.createElement("div");d.className="r";d.innerHTML=svg("clock")+" "+esc(w);d.onclick=()=>{i.value=w;search(w,out,info)};out.append(d)})};showRec();
     i.onkeydown=e=>{if(e.key==="Enter")addRec(i.value)};
     let t;i.oninput=()=>{clearTimeout(t);t=setTimeout(()=>{const q=i.value.trim();if(q.length<2){tok++;showRec();return}search(q,out,info)},350)};
   }else if(tab==="b"){
     const i=document.createElement("input");i.placeholder=`Label for page ${cur} (optional)`;const a=document.createElement("button");a.className="go2";a.textContent="Bookmark this page";
     a.onclick=()=>{b.bm=b.bm||[];b.bm.push({p:cur,l:i.value.trim()||("Page "+cur)});b.bm.sort((x,y)=>x.p-y.p);setDirty();draw()};tb.append(i,a);
-    (b.bm||[]).forEach((m,k)=>{const d=document.createElement("div");d.className="r";d.innerHTML=`<button class="x" title="Remove">✕</button>${esc(m.l)}<small>page ${m.p}</small>`;d.onclick=()=>go(m.p);d.querySelector(".x").onclick=e=>{e.stopPropagation();b.bm.splice(k,1);setDirty();draw()};tb.append(d)});
+    (b.bm||[]).forEach((m,k)=>{const d=document.createElement("div");d.className="r";d.innerHTML=`<button class="x" title="Remove">${svg("x")}</button>${esc(m.l)}<small>page ${m.p}</small>`;d.onclick=()=>go(m.p);d.querySelector(".x").onclick=e=>{e.stopPropagation();b.bm.splice(k,1);setDirty();draw()};tb.append(d)});
     if(!(b.bm||[]).length){const e=document.createElement("small");e.style.cssText="display:block;margin-top:10px;color:var(--mute)";e.textContent="No bookmarks yet.";tb.append(e)}
   }else if(tab==="f"){cardsUI()}else if(tab==="p"){progUI()}else if(tab==="d"){drawUI()}else if(tab==="v"){splitUI()}else if(tab==="c"){commentsUI()}else if(tab==="r"){restoreUI()}else{
     const nm=b.fname.replace(/\.(pdf|mar)$/i,""),nn=Object.keys(b.nb||{}).filter(q=>!nbBlank(b.nb[q])).length;
@@ -1749,7 +1784,7 @@ function drawUI(){const b=active,p0=cur;tb.innerHTML=`<p style="margin:0 0 8px">
   btn(r4,"Clear page "+p0,()=>{if(b.ink&&b.ink[p0]&&b.ink[p0].length&&confirm("Remove all drawing on page "+p0+"?")){b.ink[p0]=[];b.inkv=(b.inkv||0)+1;setDirty()}})}
 /* ---- split view: a floating reference pane showing any page of any open book next to the one you are working in ---- */
 const sp=document.createElement("div");sp.id="sp";sp.style.cssText="position:fixed;left:14px;bottom:14px;width:min(480px,92vw);height:62vh;display:none;flex-direction:column;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh);z-index:58;resize:both;overflow:hidden;min-width:260px;min-height:200px;font:13px var(--ui)";
-sp.innerHTML=`<div style="display:flex;gap:4px;align-items:center;padding:6px;border-bottom:1px solid var(--line);flex-wrap:wrap"><select id="spb" style="max-width:140px"></select><button id="spp">‹</button><input id="spn" type="number" min="1" value="1" style="width:56px"><span id="spt"></span><button id="spn2">›</button><button id="spm">−</button><button id="spl">+</button><button id="spf">Fit</button><button id="spx" style="margin-left:auto">✕</button></div><div id="spv" style="overflow:auto;flex:1;background:var(--desk);text-align:center;padding:6px"><canvas></canvas></div>`;document.body.append(sp);
+sp.innerHTML=`<div style="display:flex;gap:4px;align-items:center;padding:6px;border-bottom:1px solid var(--line);flex-wrap:wrap"><select id="spb" style="max-width:140px"></select><button id="spp">${svg("left")}</button><input id="spn" type="number" min="1" value="1" style="width:56px"><span id="spt"></span><button id="spn2">${svg("right")}</button><button id="spm">${svg("minus")}</button><button id="spl">${svg("plus")}</button><button id="spf">Fit</button><button id="spx" style="margin-left:auto">${svg("x")}</button></div><div id="spv" style="overflow:auto;flex:1;background:var(--desk);text-align:center;padding:6px"><canvas></canvas></div>`;document.body.append(sp);
 let spB=null,spN=1,spZ=0,spTok=0;const S=i=>sp.querySelector(i);
 async function spDraw(){const my=++spTok,b=spB;if(!b)return;spN=Math.min(Math.max(1,spN),b.pdf.numPages);S("#spn").value=spN;S("#spt").textContent="/ "+b.pdf.numPages;
   const pg=await b.pdf.getPage(spN),v1=pg.getViewport({scale:1}),z=spZ||(S("#spv").clientWidth-14)/v1.width,vp=pg.getViewport({scale:z*(devicePixelRatio||1)}),cv=document.createElement("canvas");
@@ -1767,10 +1802,10 @@ st.textContent+=`#tl .th{display:none}#bar button.tlb{font-size:15px}#bar button
 function setPenBtn(){const x=$("#bpen");if(x)x.classList.toggle("on",pen.on)}
 function openTab(t,a){if(box.style.display==="flex"&&tab===t&&box._a===a){box.style.display="none";return}
   tab=t;box._a=a;box.style.display="flex";const r=a.getBoundingClientRect(),w=Math.min(380,innerWidth-28);box.style.right="auto";box.style.left=Math.max(8,Math.min(r.left,innerWidth-w-8))+"px";box.style.top=(r.bottom+6)+"px";draw()}
-const tbtn=(id,label,title,t,after)=>{const x=document.createElement("button");x.id=id;x.className="tlb";x.textContent=label;x.title=title;x.onclick=()=>openTab(t,x);after.after(x);return x};
-{let a=$("#open");a=tbtn("bpen","✎","Draw on the pages (pen, eraser)","d",a);a=tbtn("bsplit","◫","Split view: a reference pane","v",a);tbtn("bprog","⏱","Progress and study timer","p",a);
- let c=$("#total");c=tbtn("bsearch","🔍","Search this book, your notes and notebooks","s",c);tbtn("bbm","🔖","Bookmarks","b",c);
- tbtn("brest","▾","Earlier versions and unsaved-work backup","r",$("#savepdf"))}
+const tbtn=(id,label,title,t,after)=>{const x=document.createElement("button");x.id=id;x.className="tlb";x.innerHTML=svg(label);x.title=title;x.onclick=()=>openTab(t,x);after.after(x);return x};
+{let a=$("#open");a=tbtn("bpen","pen","Draw on the pages (pen, eraser)","d",a);a=tbtn("bsplit","split","Split view: a reference pane","v",a);tbtn("bprog","timer","Progress and study timer","p",a);
+ let c=$("#total");c=tbtn("bsearch","search","Search this book, your notes and notebooks","s",c);tbtn("bbm","bookmark","Bookmarks","b",c);
+ tbtn("brest","versions","Earlier versions and unsaved-work backup","r",$("#savepdf"))}
 document.addEventListener("pointerdown",e=>{if(box.style.display==="flex"&&!box.contains(e.target)&&!e.target.closest(".tlb,.nbar"))box.style.display="none"},true);
 /* inside every note window: copy citation and replies */
 const _rp=renderPop;renderPop=function(n){_rp(n);try{noteExtras(n)}catch(e){console.error(e)}};
@@ -1801,21 +1836,21 @@ const bar=document.getElementById("bar"),N=id=>document.getElementById(id),D=c=>
 const btn=(ico,l,fn,id)=>{const x=document.createElement("button");x.innerHTML=ico;x.dataset.lbl=l;if(id)x.id=id;x.onclick=()=>fn(x);return x};
 const group=(name,items,keep)=>{const g=D("rg"+(keep?" keep":"")),r=D("rb"),n=D("rn");items.forEach(x=>x&&r.append(x));n.textContent=name;g.append(r,n);return g};
 /* title bar: logo (only while the left pane is hidden), menu, book name | tabs | AutoSave, Export, Save, name, dark mode */
-const ex=document.createElement("button");ex.id="bexport";ex.innerHTML='<span class="ei">⤓</span><span class="et">Export</span>';
+const ex=document.createElement("button");ex.id="bexport";ex.innerHTML='<span class="ei">'+svg("export")+'</span><span class="et">Export</span>';
 ex.onclick=()=>{if(!active)return toast("Open a book first.");MG.openTab("e",ex)};
 const tbar=D(),L=D("l"),R=D("r"),lg=N("logo").cloneNode(true);lg.id="tlogo";lg.removeAttribute("width");lg.removeAttribute("height");
 const rt=D();rt.id="rtabs";rt.setAttribute("role","tablist");
 tbar.id="tbar";L.append(lg,N("tgl"),N("title"));R.append(N("autosv"),ex,N("savepdf"),N("who"),N("theme"));tbar.append(L,rt,R);
 /* Draw tab */
 const P=MG.pen;
-const penB=btn("✎","Pen",()=>{P.on=!P.on;if(!P.on)P.er=false;MG.setPenBtn();sync()},"rpen"),erB=btn("⌫","Eraser",()=>{P.er=!P.er;if(P.er)P.on=true;MG.setPenBtn();sync()},"rer");
+const penB=btn(svg("pen"),"Pen",()=>{P.on=!P.on;if(!P.on)P.er=false;MG.setPenBtn();sync()},"rpen"),erB=btn(svg("eraser"),"Eraser",()=>{P.er=!P.er;if(P.er)P.on=true;MG.setPenBtn();sync()},"rer");
 const cols=["#e63946","#1d6fe0","#2e9e5b","#111111","#f2b705"].map((c,i)=>{const x=document.createElement("button");x.className="sw";x.style.background=c;x.id="rcol"+(i+1);x.dataset.c=c;x.onclick=()=>{P.c=c;P.er=false;P.on=true;MG.setPenBtn();sync()};return x});
 const wd=[["Thin",.002],["Medium",.004],["Thick",.009]].map(([n,v],i)=>{const x=document.createElement("button");x.className="wb";x.id="rw"+(i+1);x.textContent=n;x.dataset.w=v;x.onclick=()=>{P.w=v;sync()};return x});
-const undo=btn("↶","Undo stroke",()=>{const a=active.ink&&active.ink[cur];if(a&&a.length){a.pop();active.inkv=(active.inkv||0)+1;setDirty()}},"rundo");
-const clr=btn("🗑","Clear page",()=>{if(active.ink&&active.ink[cur]&&active.ink[cur].length&&confirm("Remove all drawing on page "+cur+"?")){active.ink[cur]=[];active.inkv=(active.inkv||0)+1;setDirty()}},"rclr");
+const undo=btn(svg("undo"),"Undo stroke",()=>{const a=active.ink&&active.ink[cur];if(a&&a.length){a.pop();active.inkv=(active.inkv||0)+1;setDirty()}},"rundo");
+const clr=btn(svg("trash"),"Clear page",()=>{if(active.ink&&active.ink[cur]&&active.ink[cur].length&&confirm("Remove all drawing on page "+cur+"?")){active.ink[cur]=[];active.inkv=(active.inkv||0)+1;setDirty()}},"rclr");
 function sync(){penB.classList.toggle("on",P.on&&!P.er);erB.classList.toggle("on",P.er);cols.forEach(x=>x.classList.toggle("sel",x.dataset.c===P.c&&!P.er));wd.forEach(x=>x.classList.toggle("on",+x.dataset.w===P.w))}
 const PGI=N("pg"),pgw=D("pgw");pgw.append(PGI,N("total"));
-const notesPanel=btn("☰","Notes list",x=>MG.openTab("n",x),"rnotes"),cards=btn("🃏","Flashcards",x=>MG.openTab("f",x),"rcards"),repl=btn("💬","Replies",x=>MG.openTab("c",x),"rrepl");
+const notesPanel=btn(svg("notelist"),"Notes list",x=>MG.openTab("n",x),"rnotes"),cards=btn(svg("cards"),"Flashcards",x=>MG.openTab("f",x),"rcards"),repl=btn(svg("reply"),"Replies",x=>MG.openTab("c",x),"rrepl");
 const P_={
  home:[group("File",[N("open"),N("closebk"),N("brest")],true),group("Go to",[N("prev"),pgw,N("next")]),group("Find",[N("bsearch"),N("bbm")])],
  view:[group("Zoom",[N("zout"),N("zl"),N("zin")]),group("Appearance",[N("boost"),N("pgmode")])],
@@ -1825,7 +1860,7 @@ const P_={
 };
 const names={home:"Home",view:"View",notes:"Notes",draw:"Draw",study:"Study"};
 /* the panel itself, with its own "keep pinned" switch */
-const rpanel=D();rpanel.id="rpanel";const body=D("rpbody"),pin=document.createElement("button");pin.id="rpin";pin.className="rpin";pin.innerHTML='📌 <span>Keep action panel pinned</span>';
+const rpanel=D();rpanel.id="rpanel";const body=D("rpbody"),pin=document.createElement("button");pin.id="rpin";pin.className="rpin";pin.innerHTML=svg("pin")+' <span>Keep action panel pinned</span>';
 rpanel.append(body,pin);
 let cur_="home",pinned=false,openP=false,hideT=0;try{cur_=localStorage.getItem("mg-rtab")||"home";pinned=localStorage.getItem("mg-rpin")==="1"}catch(e){}if(!P_[cur_])cur_="home";
 const panes={},tabB={};
@@ -2054,7 +2089,7 @@ function end(){mark();if(ov)ov.remove();ov=null;document.removeEventListener("ke
 const rs=()=>ov&&show();
 function start(){if(ov)return;try{window.MG&&MG.box&&(MG.box.style.display="none")}catch(e){}i=0;ov=document.createElement("div");ov.id="tourov";hl=document.createElement("div");hl.id="tourhl";card=document.createElement("div");card.id="tourcard";card.setAttribute("role","dialog");card.setAttribute("aria-label","Marginalia tour");ov.append(hl,card);document.body.append(ov);document.addEventListener("keydown",key,true);addEventListener("resize",rs);show()}
 /* restart: a ? button in the top bar and a link on the start screen */
-const b=document.createElement("button");b.id="tourbtn";b.textContent="?";b.title="Take the quick tour again";b.setAttribute("aria-label","Take the quick tour");b.onclick=start;
+const b=document.createElement("button");b.id="tourbtn";b.innerHTML=svg("help");b.title="Take the quick tour again";b.setAttribute("aria-label","Take the quick tour");b.onclick=start;
 const th=$$("#theme");if(th)th.before(b);
 const em=$$("#empty");if(em){const l=document.createElement("button");l.className="tourlink";l.textContent="Take the quick tour";l.onclick=start;em.append(l)}
 window.startTour=start;
@@ -2086,14 +2121,14 @@ try{const c=localStorage.getItem(K);if(c&&/^#[0-9a-f]{6}$/i.test(c))setAccent(c,
 const ap=document.createElement("div");ap.id="accpop";document.body.append(ap);
 function drawAcc(){const cur=curAcc().toLowerCase();ap.innerHTML=`<b>Accent colour</b><div class="sw">${PRE.map(c=>`<button data-c="${c}" title="${c}" style="background:${c}" class="${c===cur?"on":""}"></button>`).join("")}</div><div class="row"><input type="color" value="${/^#[0-9a-f]{6}$/i.test(cur)?cur:"#3a4bd8"}" title="Pick any colour"><span>Custom</span><button class="rs" style="margin-left:auto">Reset</button></div>`;
   ap.querySelectorAll(".sw button").forEach(b=>b.onclick=()=>{setAccent(b.dataset.c);drawAcc()});ap.querySelector("input").oninput=e=>{setAccent(e.target.value)};ap.querySelector(".rs").onclick=()=>{setAccent(null);drawAcc()}}
-const ab=document.createElement("button");ab.id="accbtn";ab.textContent="🎨";ab.title="Choose the accent colour";ab.setAttribute("aria-label","Accent colour");
+const ab=document.createElement("button");ab.id="accbtn";ab.innerHTML=svg("palette");ab.title="Choose the accent colour";ab.setAttribute("aria-label","Accent colour");
 ab.onclick=()=>{if(ap.style.display==="block"){ap.style.display="none";return}drawAcc();const r=ab.getBoundingClientRect();ap.style.display="block";ap.style.top=r.bottom+8+"px";ap.style.left=Math.max(8,Math.min(r.left-170,innerWidth-ap.offsetWidth-8))+"px"};
 const th=$$("#tourbtn")||$$("#theme");if(th)th.before(ab);
 /* ---- Look up (in-app): dictionary + Wikipedia, with a Google button ---- */
 const lk=document.createElement("div");lk.id="lkp";document.body.append(lk);
 const closeLk=()=>{lk.style.display="none"};
 async function jget(u){const r=await fetch(u);if(!r.ok)throw 0;return r.json()}
-async function lookup(q,r){q=q.replace(/\s+/g," ").trim().slice(0,100);lk.innerHTML=`<button class="x" aria-label="Close">×</button><h4>${esc(q)}</h4><div class="b"><small>Looking up…</small></div><button class="g">Search Google ↗</button>`;
+async function lookup(q,r){q=q.replace(/\s+/g," ").trim().slice(0,100);lk.innerHTML=`<button class="x" aria-label="Close">${svg("x")}</button><h4>${esc(q)}</h4><div class="b"><small>Looking up…</small></div><button class="g">Search Google ${svg("ext")}</button>`;
   lk.style.display="block";lk.style.left=Math.max(8,Math.min(r.left,innerWidth-lk.offsetWidth-8))+"px";lk.style.top=Math.min(r.bottom+8,Math.max(8,innerHeight-lk.offsetHeight-8))+"px";
   lk.querySelector(".x").onclick=closeLk;lk.querySelector(".g").onclick=()=>window.open("https://www.google.com/search?q="+encodeURIComponent(q),"_blank","noopener");
   const B=lk.querySelector(".b");let html="";
@@ -2105,7 +2140,7 @@ async function lookup(q,r){q=q.replace(/\s+/g," ").trim().slice(0,100);lk.innerH
   B.innerHTML=html||`<small>Nothing found here (or you are offline). Try Google below.</small>`}
 document.addEventListener("pointerdown",e=>{if(ap.style.display==="block"&&!ap.contains(e.target)&&e.target!==ab)ap.style.display="none";if(lk.style.display==="block"&&!lk.contains(e.target)&&!e.target.closest("#sel"))closeLk()},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){ap.style.display="none";closeLk()}});
-const _rs=renderSel;renderSel=function(){_rs();const sel=$$("#sel"),b=document.createElement("button");b.className="ch";b.title="Look up the selected text without leaving the app";b.innerHTML="🔍 Look up";
+const _rs=renderSel;renderSel=function(){_rs();const sel=$$("#sel"),b=document.createElement("button");b.className="ch";b.title="Look up the selected text without leaving the app";b.innerHTML=svg("search")+" Look up";
   b.onclick=()=>{const q=(pending&&pending.text)||"";if(!q)return;const r=sel.getBoundingClientRect();sel.style.display="none";lookup(q,r)};sel.append(b)};
 })();
 </script>
