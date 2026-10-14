@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>/* OneDrive sign-in window: pass the answer to the app window and close */
+(function(){try{if(/[?&](code|error)=/.test(location.search)&&/[?&]state=od_/.test(location.search)&&localStorage.getItem("od_mode")==="popup"){new BroadcastChannel("od_auth").postMessage(location.search);document.write("<p style='font:16px system-ui;padding:24px'>Signed in. You can close this window.</p>");window.stop();setTimeout(function(){window.close()},60)}}catch(e){}})();</script>
 <meta charset="utf-8">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2048%2048%22%20width=%22256%22%20height=%22256%22%3E%3Crect%20width=%2248%22%20height=%2248%22%20rx=%2212%22%20fill=%22%233a4bd8%22/%3E%3Cpath%20d=%22M14%209h14l8%208v22a2%202%200%200%201-2%202H14a2%202%200%200%201-2-2V11a2%202%200%200%201%202-2z%22%20fill=%22%23fff%22/%3E%3Cpath%20d=%22M28%209l8%208h-6a2%202%200%200%201-2-2z%22%20fill=%22%233a4bd8%22%20fill-opacity=%22.3%22/%3E%3Crect%20x=%2217%22%20y=%2221%22%20width=%2212%22%20height=%222.6%22%20rx=%221.3%22%20fill=%22%233a4bd8%22%20fill-opacity=%22.45%22/%3E%3Crect%20x=%2215.5%22%20y=%2226%22%20width=%2219%22%20height=%226.4%22%20rx=%222.2%22%20fill=%22%233a4bd8%22%20fill-opacity=%22.22%22/%3E%3Crect%20x=%2217.5%22%20y=%2227.9%22%20width=%2214%22%20height=%222.6%22%20rx=%221.3%22%20fill=%22%233a4bd8%22/%3E%3Crect%20x=%2217%22%20y=%2235.5%22%20width=%229%22%20height=%222.6%22%20rx=%221.3%22%20fill=%22%233a4bd8%22%20fill-opacity=%22.45%22/%3E%3C/svg%3E">
 <title>Marginalia</title>
@@ -497,7 +499,7 @@ function autoState(b){return !b?"none":!b.nom?"new":!b.handle?"nofile":autoPref=
 function updateAuto(){
   const el=$("#autosv");if(!el)return;
   const st=autoState(active),T={
-    on:"AutoSave is on: your .mar book is saved 5 minutes after a change. Click to turn it off.",
+    on:"AutoSave is on: your .mar book is saved 5 minutes after a change"+(active&&active.handle&&active.handle.isOD?", back into OneDrive":", back into the file it was opened from")+". Click to turn it off.",
     new:"Press Save once to create your .mar book. After that AutoSave keeps it up to date every 5 minutes. Click here to do that now.",
     off:"AutoSave is off. Click to turn it on.",
     perm:"AutoSave needs permission to write to this file. Click to allow.",
@@ -533,6 +535,7 @@ $("#autosv").onclick=()=>{
   const b=active;if(!b)return;const st=$("#autosv").dataset.st;
   if(st==="new"){saveBook(b);return}
   if(st==="nofile"){const p=$("#autoPop");p.style.display==="block"?p.style.display="none":renderAutoPop();return}
+  if(st==="perm"&&b.handle&&b.handle.isOD){odReconnect().then(ok=>{if(ok){toast("AutoSave is on")}else toast("OneDrive sign-in was not completed, so AutoSave stays paused")});return}
   if(st==="perm"){b.handle.requestPermission({mode:"readwrite"}).then(r=>{b.perm=r;updateAuto();toast(r==="granted"?"AutoSave is on":"Permission was not given, so AutoSave stays off");if(r==="granted"&&b.dirty)armAuto(b)}).catch(()=>{});return}
   autoPref=!autoPref;try{localStorage.autosave=autoPref?"1":"0"}catch(e){}
   updateAuto();toast(autoPref?"AutoSave is on":"AutoSave is off. Use Save to save.");
@@ -715,7 +718,7 @@ async function load(f,h=null){
   const meta=await readNotes(by);   /* notes embedded by older versions, if any */
   try{doc=await pdfjsLib.getDocument({data:by}).promise}catch(e){return alert("Could not read that PDF: "+e.message)}
   /* the PDF itself is never written to: the first Save packs it, with the notes, into a new .mar book */
-  return addBook(doc,f,null,meta,{file:f});
+  return addBook(doc,f,null,meta,{file:f,origin:h});
 }
 /* a .mar book: the PDF is read once (no second copy is kept) and the notes come from the notes part of the file */
 async function loadNom(f,h=null){
@@ -1497,16 +1500,19 @@ async function writeNom(b,auto){   /* existing .mar book: rebuild header + notes
   try{
   const side=await nomPack(nomState(b)),pdfPart=await nomPdfPart(b);
   const blob=new Blob([nomHead(pdfPart.size,side),pdfPart,side.bytes],{type:NOM_MIME});
-  if(b.handle){const w=await b.handle.createWritable();await w.write(blob);await w.close();b.perm="granted";toast((auto?"Autosaved ":"Saved to ")+b.fname);b.file=await b.handle.getFile()}
+  if(b.handle){const w=await b.handle.createWritable();await w.write(blob);await w.close();b.perm="granted";toast((auto?"Autosaved ":"Saved to ")+(b.handle.isOD?"OneDrive: ":"")+b.fname);b.file=await b.handle.getFile()}
   else{nomDownload(blob,b.fname);toast("Downloaded "+b.fname+". Replace your copy with it.")}
   return blob.size;
   }catch(e){Object.assign(b,prev);throw e}   /* a failed write must not use up a history slot */
 }
 async function createNom(b){   /* first Save of a PDF: ask where to put the new .mar book; returns null if cancelled */
   const base=b.fname.replace(/\.(pdf|mar)$/i,"");let h=null;
-  if(window.showSaveFilePicker){
-    try{h=await showSaveFilePicker({suggestedName:base+".mar",id:"noman-pdf-reader",excludeAcceptAllOption:true,types:SAVE_TYPES})}
-    catch(e){if(e.name==="AbortError")return null;h=null}
+  if(b.origin&&b.origin.isOD&&odUsable()){h=odNewHandle(b.origin,base+".mar")}   /* opened from OneDrive: the new .mar goes into the same OneDrive folder */
+  else if(window.showSaveFilePicker){
+    const o={suggestedName:base+".mar",id:"noman-pdf-reader",excludeAcceptAllOption:true,types:SAVE_TYPES};if(b.origin&&!b.origin.isOD)o.startIn=b.origin;   /* opened from a folder: start the Save window in that folder */
+    try{h=await showSaveFilePicker(o)}
+    catch(e){if(e.name==="AbortError")return null;h=null;
+      if(o.startIn){delete o.startIn;try{h=await showSaveFilePicker(o)}catch(e2){if(e2.name==="AbortError")return null;h=null}}}
   }
   const st=nomState(b);st.pdfName=b.fname;
   const side=await nomPack(st),pdfPart=b.file;
@@ -1518,7 +1524,7 @@ async function createNom(b){   /* first Save of a PDF: ask where to put the new 
     Object.assign(b,{nom:{pdfLen:pdfPart.size,pdfName:b.fname},handle:h,fname:h.name,file:await h.getFile(),perm:"granted",permTry:1,autoWarned:0});
     if(b===active){handle=h;fname=h.name;$("#title").textContent=fname.replace(/\.(pdf|mar)$/i,"")}
     b.base=JSON.stringify(coreOf(b));b.baseT=Date.now();
-    renderTabs();toast("Saved "+h.name+". Share this one file: it holds the PDF and all your notes.");
+    renderTabs();toast((h.isOD?"Saved to OneDrive: ":"Saved ")+h.name+". Share this one file: it holds the PDF and all your notes.");
   }else{b.base=JSON.stringify(coreOf(b));b.baseT=Date.now();nomDownload(blob,base+".mar");toast("Downloaded "+base+".mar. Open that file here to keep working in it.")}
   return blob.size;
 }
@@ -1561,7 +1567,7 @@ const st=document.createElement("style");st.textContent=`#tl{position:fixed;top:
 #tl .tb{padding:10px;overflow:auto}#tl input{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);font:14px var(--ui)}
 #tl .r{padding:8px;border-radius:8px;cursor:pointer;margin-top:4px}#tl .r:hover{background:var(--hover)}#tl .r small{color:var(--mute);display:block}#tl mark{background:#ffe27a;color:#000;border-radius:3px}
 #tl .go2{margin-top:8px;padding:8px 12px;border:0;border-radius:8px;background:var(--acc);color:var(--on);font:600 13px var(--ui);cursor:pointer}#tl #nl.pane{display:block;padding:0;overflow:visible;animation:none}#tl .x{float:right;border:0;background:none;color:var(--mute);cursor:pointer}`;document.head.append(st);
-const box=document.createElement("div");box.id="tl";box.innerHTML='<div class="th"><button data-t="n">Notes list</button><button data-t="s">Search</button><button data-t="b">Bookmarks</button><button data-t="f">Cards</button><button data-t="d">Draw</button><button data-t="v">Split</button><button data-t="c">Comments</button><button data-t="p">Progress</button><button data-t="r">Restore</button><button data-t="e">Export</button></div><div class="tb"></div>';document.body.append(box);
+const box=document.createElement("div");box.id="tl";box.innerHTML='<div class="th"><button data-t="o">OneDrive</button><button data-t="n">Notes list</button><button data-t="s">Search</button><button data-t="b">Bookmarks</button><button data-t="f">Cards</button><button data-t="d">Draw</button><button data-t="v">Split</button><button data-t="c">Comments</button><button data-t="p">Progress</button><button data-t="r">Restore</button><button data-t="e">Export</button></div><div class="tb"></div>';document.body.append(box);
 const tb=box.querySelector(".tb"),esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let tab="s",tok=0;
 const replyHtml=r=>`<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-2px"><path d="M5 4v8a3 3 0 003 3h11M15 11l4 4-4 4"/></svg> <b>${esc(r.a)}</b>${r.d?` <span class="rd">· ${stamp(r.d)}</span>`:""}<div class="rt">${esc(r.t)}</div>`;
@@ -1584,6 +1590,7 @@ async function search(q,out,info){
 }
 function draw(){
   box.querySelectorAll(".th button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));document.getElementById("nlhold").append(document.getElementById("nl"));tb.innerHTML="";const b=active;
+  if(tab==="o"){odPanel(tb);return}
   if(!b){tb.textContent="Open a book first.";return}
   if(tab==="n"){tb.append(document.getElementById("nl"));refreshList();return}
   if(tab==="s"){
@@ -1855,7 +1862,7 @@ function sync(){penB.classList.toggle("on",P.on&&!P.er);erB.classList.toggle("on
 const PGI=N("pg"),pgw=D("pgw");pgw.append(PGI,N("total"));
 const notesPanel=btn(svg("notelist"),"Notes list",x=>MG.openTab("n",x),"rnotes"),cards=btn(svg("cards"),"Flashcards",x=>MG.openTab("f",x),"rcards"),repl=btn(svg("reply"),"Replies",x=>MG.openTab("c",x),"rrepl");
 const P_={
- home:[group("File",[N("open"),N("closebk"),N("brest")],true),group("Go to",[N("prev"),pgw,N("next")]),group("Find",[N("bsearch"),N("bbm")])],
+ home:[group("File",[N("open"),N("closebk"),N("brest")],true),group("OneDrive",[btn("☁","OneDrive",x=>MG.openTab("o",x),"rod")],true),group("Go to",[N("prev"),pgw,N("next")]),group("Find",[N("bsearch"),N("bbm")])],
  view:[group("Zoom",[N("zout"),N("zl"),N("zin")]),group("Appearance",[N("boost"),N("pgmode")])],
  notes:[group("Notebook",[N("nbtgl")]),group("Notes",[notesPanel,repl])],
  draw:[group("Pen",[penB,erB]),group("Colour",cols),group("Width",wd),group("Page",[undo,clr])],
@@ -2225,6 +2232,167 @@ if(window.MGK)MGK.R.push(["KeyJ",0,"J","Look up the selected text","Find",lookup
 /* phones: lift the notebook formatting bar above the on-screen keyboard */
 (()=>{const T=document.querySelector("#nbtool"),v=window.visualViewport;if(!T||!v)return;
   const f=()=>{T.style.bottom=innerWidth>700?"":Math.max(8,innerHeight-v.height-v.offsetTop+8)+"px"};v.addEventListener("resize",f);v.addEventListener("scroll",f);addEventListener("resize",f)})();
+</script>
+<script>
+/* ===== OneDrive (Microsoft Graph). A OneDrive file behaves like a file on disk: the book gets a "handle" with the same getFile / createWritable calls,
+   so Save and AutoSave write straight back to where the book was opened from. Sign-in keeps its tokens in this browser (localStorage). ===== */
+(()=>{
+const OD_CLIENT_ID="";   /* optional: paste your Azure "Application (client) ID" here instead of using the setup box */
+const AUTH="https://login.microsoftonline.com/common/oauth2/v2.0/authorize",TOKEN="https://login.microsoftonline.com/common/oauth2/v2.0/token",SCOPE="Files.ReadWrite User.Read offline_access",GRAPH="https://graph.microsoft.com/v1.0";
+const $=id=>document.getElementById(id);
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+const cid=()=>OD_CLIENT_ID||ls.get("od_client")||"";
+const tok=()=>{try{return JSON.parse(ls.get("od_tok"))}catch(e){return null}};
+const ruri=()=>location.origin+location.pathname;
+const b64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const authErr=()=>Object.assign(new Error("Not signed in to OneDrive"),{auth:1});
+const e8=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const usable=()=>{const t=tok();return !!t&&(t.exp>Date.now()+30000||(!!t.rt&&Date.now()<(t.rtExp||0)))};
+const odBooks=()=>books.filter(b=>b.handle&&b.handle.isOD);
+function syncBooks(){const st=usable()?"granted":"prompt";odBooks().forEach(b=>{b.perm=st;if(st==="granted"){b.autoWarned=0;if(b.dirty)armAuto(b)}});updateAuto();render()}
+function saveTok(j,user,fresh){const o=tok()||{};ls.set("od_tok",JSON.stringify({at:j.access_token,rt:j.refresh_token||o.rt,exp:Date.now()+(j.expires_in||3600)*1000,rtExp:fresh?Date.now()+23.5*3600e3:(o.rtExp||Date.now()+23.5*3600e3),user:user||o.user}))}
+let ref=null;
+function need(){odBooks().forEach(b=>b.perm="prompt");updateAuto();render()}
+function token(){
+  const t=tok();if(!t)return Promise.reject(authErr());
+  if(t.exp>Date.now()+60000)return Promise.resolve(t.at);
+  if(!t.rt||Date.now()>=(t.rtExp||0)){need();return Promise.reject(authErr())}
+  return ref||(ref=(async()=>{try{
+    const r=await fetch(TOKEN,{method:"POST",body:new URLSearchParams({client_id:cid(),grant_type:"refresh_token",refresh_token:t.rt,scope:SCOPE})}),j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.access_token){need();throw authErr()}
+    saveTok(j);return j.access_token}finally{ref=null}})());
+}
+async function graph(path,opt={}){
+  const t=await token(),r=await fetch(path[0]==="/"?GRAPH+path:path,{...opt,headers:{Authorization:"Bearer "+t,...(opt.headers||{})}});
+  if(!r.ok){const e=new Error("HTTP "+r.status);e.status=r.status;if(r.status===401){e.auth=1;need()}throw e}
+  return r}
+/* ---- sign in (popup, PKCE; falls back to a full-page redirect if the popup is blocked) ---- */
+async function connect(){
+  if(location.protocol==="file:"){alert("Microsoft sign-in needs this app to be hosted at an https:// address (or http://localhost). It cannot run from a file on your disk.");return false}
+  if(!cid())return false;
+  const ver=b64u(crypto.getRandomValues(new Uint8Array(48))),ch=b64u(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(ver))),st="od_"+b64u(crypto.getRandomValues(new Uint8Array(12))),t0=tok();
+  ls.set("od_pkce",JSON.stringify({ver,st}));
+  const q={client_id:cid(),response_type:"code",redirect_uri:ruri(),scope:SCOPE,state:st,code_challenge:ch,code_challenge_method:"S256"};
+  if(t0&&t0.user&&t0.user.email)q.login_hint=t0.user.email;
+  const url=AUTH+"?"+new URLSearchParams(q),w=window.open(url,"odlogin","width=520,height=680");
+  if(!w){ls.set("od_mode","redirect");location.href=url;return false}
+  ls.set("od_mode","popup");
+  return new Promise(res=>{connect.wait=res;const iv=setInterval(()=>{if(w.closed){clearInterval(iv);setTimeout(()=>{if(connect.wait===res){connect.wait=null;res(usable())}},700)}},500)});
+}
+async function finish(qs){
+  const q=new URLSearchParams(qs),p=JSON.parse(ls.get("od_pkce")||"{}");ls.del("od_pkce");ls.del("od_mode");
+  const done=ok=>{if(connect.wait){const f=connect.wait;connect.wait=null;f(ok)}return ok};
+  if(q.get("error")||!q.get("code")||q.get("state")!==p.st){toast("OneDrive sign-in failed: "+(q.get("error_description")||q.get("error")||"please try again"));return done(false)}
+  try{
+    const r=await fetch(TOKEN,{method:"POST",body:new URLSearchParams({client_id:cid(),grant_type:"authorization_code",code:q.get("code"),redirect_uri:ruri(),code_verifier:p.ver,scope:SCOPE})}),j=await r.json();
+    if(!r.ok)throw new Error(j.error_description||j.error);
+    const me=await (await fetch(GRAPH+"/me?$select=displayName,userPrincipalName",{headers:{Authorization:"Bearer "+j.access_token}})).json();
+    saveTok(j,{name:me.displayName,email:me.userPrincipalName},true);items=null;path=[path[0]];syncBooks();toast("OneDrive connected");return done(true)
+  }catch(e){toast("OneDrive sign-in failed: "+e.message);return done(false)}
+}
+const bc="BroadcastChannel" in window?new BroadcastChannel("od_auth"):null;if(bc)bc.onmessage=e=>finish(e.data);
+let back=null;
+if(/[?&](code|error)=/.test(location.search)&&/[?&]state=od_/.test(location.search)){back=location.search;history.replaceState(null,"",location.pathname)}
+function signOut(){ls.del("od_tok");items=null;syncBooks();toast("Signed out of OneDrive. Books open from OneDrive stay on screen; sign in again to save them.")}
+/* ---- a OneDrive file that looks like a file handle ---- */
+class ODHandle{
+  constructor(o){this.kind="file";this.isOD=true;this.name=o.name;this.drive=o.drive;this.id=o.id||null;this.parent=o.parent||null;this.etag=o.etag||null;this._file=o.file||null}
+  async getFile(){
+    if(this._file)return this._file;
+    const blob=await (await graph(`/drives/${this.drive}/items/${this.id}/content`)).blob();return this._file=new File([blob],this.name,{type:blob.type||"application/octet-stream"})}
+  async createWritable(){const me=this;let blob=null;return{write:async b=>{blob=b},close:async()=>{await me._upload(blob)}}}
+  async _upload(blob){
+    const url=this.id?`/drives/${this.drive}/items/${this.id}/content`:`/drives/${this.drive}/items/${this.parent}:/${encodeURIComponent(this.name)}:/content?@microsoft.graph.conflictBehavior=rename`;
+    let r;try{r=await graph(url,{method:"PUT",headers:{"Content-Type":"application/octet-stream",...(this.id&&this.etag?{"If-Match":this.etag}:{})},body:blob})}
+    catch(e){if(e.status===412)throw new Error("this book was changed on OneDrive since you opened it (for example on another computer). Close it and open it again; your unsaved notes are still on screen.");
+      if(e.status===404)throw new Error("this file is no longer on OneDrive (it was moved or deleted).");if(e.auth)throw new Error("you are signed out of OneDrive. Click the AutoSave switch to sign in again.");throw e}
+    const it=await r.json();this.id=it.id;this.name=it.name;this.etag=it.eTag||this.etag;this.drive=(it.parentReference&&it.parentReference.driveId)||this.drive;this.parent=(it.parentReference&&it.parentReference.id)||this.parent;
+    this._file=new File([blob],this.name,{type:blob.type||"application/octet-stream"})}
+  _perm(){const st=usable()?"granted":"prompt";let ch=false;odBooks().forEach(b=>{if(b.perm!==st){b.perm=st;ch=true}});if(ch)updateAuto();return st}
+  async queryPermission(){return this._perm()}
+  async requestPermission(){return this._perm()}   /* never opens a window by itself; the AutoSave switch does that */
+}
+window.ODHandle=ODHandle;window.odUsable=usable;
+window.odNewHandle=(origin,name)=>new ODHandle({name,drive:origin.drive,parent:origin.parent});
+window.odReconnect=async()=>{const ok=usable()||await connect();syncBooks();return usable()};
+/* ---- files and folders ---- */
+const recent=()=>{try{return JSON.parse(ls.get("od_recent"))||[]}catch(e){return[]}};
+const addRecent=it=>ls.set("od_recent",JSON.stringify([it,...recent().filter(x=>x.id!==it.id)].slice(0,8).map(({id,name,drive,parent})=>({id,name,drive,parent}))));
+let path=[{id:"root",name:"OneDrive"}],items=null,q="",loading=false,host=null,root=null;
+const rootInfo=async()=>root||(root=await (await graph("/me/drive/root?$select=id,parentReference")).json());
+async function list(){
+  items=null;loading=true;render();const cur=path[path.length-1];
+  try{
+    let url=q?`/me/drive/root/search(q='${encodeURIComponent(q.replace(/'/g,"''"))}')?$top=100`:(cur.id==="root"?"/me/drive/root/children?$top=200":`/drives/${cur.drive}/items/${cur.id}/children?$top=200`),out=[];
+    for(let i=0;i<5&&url;i++){const j=await (await graph(url)).json();out.push(...j.value);url=j["@odata.nextLink"]}
+    items=out.filter(x=>x.folder||/\.(pdf|mar)$/i.test(x.name)).map(x=>({id:x.id,name:x.name,drive:x.parentReference&&x.parentReference.driveId,parent:x.parentReference&&x.parentReference.id,folder:!!x.folder,size:x.size,etag:x.eTag}));
+    items.sort((a,b)=>b.folder-a.folder||a.name.localeCompare(b.name));
+  }catch(e){items=[];err(e)}
+  loading=false;render();
+}
+function err(e){if(e.auth)toast("OneDrive session ended. Open the OneDrive tab and press Reconnect.");else toast("OneDrive: "+e.message)}
+async function openItem(it){
+  const dup=books.find(b=>b.handle&&b.handle.isOD&&b.handle.id===it.id);
+  if(dup){$("tl").style.display="none";return activate(dup)}
+  lbar(1);
+  try{
+    toast("Downloading "+it.name+"…");
+    const meta=await (await graph(`/drives/${it.drive}/items/${it.id}?$select=id,name,eTag,parentReference`)).json();
+    const blob=await (await graph(`/drives/${it.drive}/items/${it.id}/content`)).blob(),file=new File([blob],meta.name,{type:/\.pdf$/i.test(meta.name)?"application/pdf":"application/octet-stream"});
+    const h=new ODHandle({name:meta.name,id:meta.id,drive:meta.parentReference.driveId,parent:meta.parentReference.id,etag:meta.eTag,file});
+    $("tl").style.display="none";await load(file,h);addRecent({...it,id:meta.id,drive:h.drive,parent:h.parent,name:meta.name});
+  }catch(e){err(e)}finally{lbar(0)}
+}
+/* put the open book on OneDrive, in the folder you are looking at */
+async function saveHere(){
+  const b=active;if(!b)return toast("Open a book first.");
+  const cur=path[path.length-1];let drive=cur.drive,parent=cur.id;
+  try{if(cur.id==="root"){const r=await rootInfo();drive=r.parentReference.driveId;parent=r.id}}catch(e){return err(e)}
+  const base=b.fname.replace(/\.(pdf|mar)$/i,"");
+  if(!b.nom){b.origin=new ODHandle({drive,parent,name:""});toast("Saving to OneDrive…");await saveBook(b);return}   /* a PDF: becomes a .mar book that lives on OneDrive */
+  try{lbar(1);toast("Uploading a copy to OneDrive…");stash();
+    const st=nomState(b);st.pdfName=b.nom.pdfName||b.fname;const side=await nomPack(st),pdfPart=await nomPdfPart(b),blob=new Blob([nomHead(pdfPart.size,side),pdfPart,side.bytes],{type:NOM_MIME});
+    const h=new ODHandle({name:base+".mar",drive,parent});const w=await h.createWritable();await w.write(blob);await w.close();toast("Copy saved to OneDrive: "+h.name+" (this book keeps saving where it was)");list()
+  }catch(e){err(e)}finally{lbar(0)}
+}
+/* ---- the OneDrive tab ---- */
+function render(){
+  if(!host||!host.isConnected)return;const t=tok();host.innerHTML="";
+  const card=h=>{const c=document.createElement("div");c.className="odc";c.innerHTML=h;host.append(c);return c};
+  if(!cid()){
+    const c=card(`<h4>Connect OneDrive</h4><p>One-time setup (free). Microsoft needs you to register this app once:</p><ol><li>Open portal.azure.com → Microsoft Entra ID → App registrations → New registration. Choose “any organizational directory and personal Microsoft accounts”.</li><li>Redirect URI: platform “Single-page application”, value:<br><b style="word-break:break-all;color:var(--ink)">${e8(ruri())}</b></li><li>API permissions → Microsoft Graph → Delegated: Files.ReadWrite, User.Read, offline_access.</li><li>Paste the Application (client) ID below.</li></ol>${location.protocol==="file:"?'<p style="color:#d33b3b">This page is opened from a file. Host it at an https:// address first, or sign-in will not work.</p>':""}`);
+    const i=document.createElement("input");i.placeholder="Application (client) ID";const b=document.createElement("button");b.className="go2";b.textContent="Save";b.onclick=()=>{const v=i.value.trim();if(/^[0-9a-f-]{36}$/i.test(v)){ls.set("od_client",v);render()}else toast("That does not look like a client ID (36 characters with dashes)")};c.append(i,b);return}
+  if(!t||!usable()){
+    const c=card(`<h4>${t?"Session ended":"Connect OneDrive"}</h4><p>${t?"Press Reconnect. If you are still signed in to Microsoft it finishes by itself. Until then AutoSave to OneDrive is paused (your changes stay on screen).":"Sign in once. Open books from OneDrive, and AutoSave writes changes back to the same file."}</p>`);
+    const b=document.createElement("button");b.className="go2";b.textContent=t?"Reconnect":"Sign in with Microsoft";b.onclick=async()=>{await odReconnect()};c.append(b);
+    const l=document.createElement("button");l.className="odlink";l.textContent="Change app ID";l.onclick=()=>{ls.del("od_client");ls.del("od_tok");syncBooks()};c.append(" ",l);return}
+  const top=document.createElement("div");top.className="odtop";const who=document.createElement("span");who.textContent=(t.user&&(t.user.name||t.user.email))||"Signed in";
+  const so=document.createElement("button");so.className="odlink";so.textContent="Sign out";so.onclick=signOut;top.append(who,so);host.append(top);
+  const b=active;
+  if(b&&!(b.handle&&b.handle.isOD)){const sb=document.createElement("button");sb.className="go2";sb.style.margin="0 0 8px";sb.textContent=b.nom?"Save a copy of this book here":"Save this book to OneDrive here";sb.onclick=saveHere;host.append(sb)}
+  const qi=document.createElement("input");qi.className="odq";qi.placeholder="Search PDFs and books in OneDrive";qi.value=q;qi.onkeydown=e=>{if(e.key==="Enter"){q=qi.value.trim();list()}};host.append(qi);
+  if(q){const x=document.createElement("button");x.className="odlink";x.textContent="← Back to folders";x.onclick=()=>{q="";list()};host.append(x)}
+  else{const cr=document.createElement("div");cr.className="odcrumb";path.forEach((c,i)=>{const bt=document.createElement("button");bt.className="odlink";bt.textContent=(i?"/ ":"")+c.name;bt.onclick=()=>{path=path.slice(0,i+1);list()};cr.append(bt)});host.append(cr)}
+  const row=it=>{const r=document.createElement("button");r.className="odr";r.innerHTML=(it.folder?"📁":/\.mar$/i.test(it.name)?"📘":"📄")+"<span></span>";r.querySelector("span").textContent=it.name;
+    if(!it.folder&&it.size){const z=document.createElement("small");z.textContent=(it.size/1048576).toFixed(1)+" MB";r.append(z)}
+    r.onclick=it.folder?()=>{path.push({id:it.id,drive:it.drive,name:it.name});q="";list()}:()=>openItem(it);return r};
+  if(items===null&&!loading){list();return}
+  if(loading||items===null){const p=document.createElement("div");p.className="lkbar";p.innerHTML="<i></i>";host.append(p);return}
+  if(!q&&path.length===1&&recent().length){const h=document.createElement("div");h.className="odh";h.textContent="Recently opened";host.append(h);recent().forEach(it=>host.append(row(it)));const h2=document.createElement("div");h2.className="odh";h2.textContent="All files";host.append(h2)}
+  if(!items.length){const p=document.createElement("p");p.className="hint";p.textContent="No PDFs, books or folders here.";host.append(p)}else items.forEach(it=>host.append(row(it)));
+}
+window.odPanel=tb=>{host=document.createElement("div");tb.append(host);render();if(cid()&&usable()&&items===null&&!loading)list()};
+/* a small cloud on the tabs of books that live on OneDrive */
+{const _rt=renderTabs;renderTabs=function(...a){const r=_rt.apply(this,a);document.querySelectorAll("#btabs .bt").forEach(t=>{const bk=books.find(x=>String(x.id)===t.dataset.b);if(bk&&bk.handle&&bk.handle.isOD&&!t.querySelector(".cl")){const c=document.createElement("span");c.className="cl";c.textContent="☁";c.title="Saved on OneDrive: "+bk.handle.name;t.insertBefore(c,t.firstChild)}});return r}}
+const st=document.createElement("style");st.textContent=`#tl .odr{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:0;background:none;color:var(--ink);padding:9px 10px;border-radius:9px;cursor:pointer;font:14px var(--ui)}#tl .odr:hover{background:var(--hover)}#tl .odr span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#tl .odr small{color:var(--mute)}
+#tl .odc{background:var(--hover);border-radius:12px;padding:14px;margin:2px}#tl .odc h4{margin:0 0 6px}#tl .odc p,#tl .odc ol{color:var(--mute);margin:0 0 10px;font-size:13px}#tl .odc ol{padding-left:18px}#tl .odc input{margin-bottom:8px}
+#tl .odlink{border:0;background:none;color:var(--acc);padding:2px 4px;cursor:pointer;font:600 13px var(--ui)}#tl .odcrumb{display:flex;flex-wrap:wrap;gap:2px;margin:6px 0}#tl .odh{font-size:12px;color:var(--mute);margin:10px 4px 2px;text-transform:uppercase;letter-spacing:.04em}#tl .odtop{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--mute);padding:2px 4px 6px}#tl .odq{margin-bottom:6px}
+#tl .lkbar{height:4px;border-radius:3px;overflow:hidden;background:var(--hover);margin:10px 0}#tl .lkbar i{display:block;height:100%;width:38%;border-radius:3px;background:linear-gradient(90deg,transparent,var(--acc),transparent);animation:ind 1.05s cubic-bezier(.4,0,.2,1) infinite}
+#btabs .bt .cl{font-size:12px;color:var(--acc);margin-right:2px}`;document.head.append(st);
+if(window.MGK)MGK.R.push(["Digit9",0,"9","OneDrive: browse and open","File",()=>MG.openTab("o",$("rtabs"))]);
+render();
+if(back)finish(back);else{const t=tok();if(t&&t.exp<Date.now()+60000&&usable())token().catch(()=>{})}
+})();
 </script>
 </body>
 </html>
