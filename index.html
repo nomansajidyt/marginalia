@@ -1415,6 +1415,10 @@
       #pages {
         --z: 1.3;
       }
+      /* Keep notebook text baselines and the ruled-paper grid on the same rhythm. */
+      .ned {
+        --nb-rule: calc(var(--z) * 24px);
+      }
       .nb {
         position: absolute;
         left: calc(100% + 18px);
@@ -1480,11 +1484,11 @@
         outline: 0;
         padding: 0 calc(var(--z) * 20px) calc(var(--z) * 14px)
           calc(var(--z) * 38px);
-        font: calc(var(--z) * 14px)/calc(var(--z) * 24px) var(--serif);
+        font: calc(var(--z) * 16px)/var(--nb-rule) "Patrick Hand", "Segoe Print", "Bradley Hand", "Chalkboard SE", "Comic Sans MS", cursive;
         color: var(--nbink);
         background: repeating-linear-gradient(
-          transparent 0 calc(var(--z) * 24px - 1px),
-          var(--nbline) calc(var(--z) * 24px - 1px) calc(var(--z) * 24px)
+          transparent 0 calc(var(--nb-rule) - 1px),
+          var(--nbline) calc(var(--nb-rule) - 1px) var(--nb-rule)
         );
         background-attachment: local;
         overflow-wrap: anywhere;
@@ -1520,7 +1524,6 @@
         font-family:
           "Patrick Hand", "Segoe Print", "Bradley Hand", "Chalkboard SE",
           "Comic Sans MS", cursive;
-        font-size: calc(var(--z) * 16px);
       }
       .ned sup,
       .ned sub {
@@ -1534,7 +1537,17 @@
       .ned p,
       .ned li,
       .ned h3 {
-        line-height: calc(var(--z) * 24px);
+        line-height: var(--nb-rule);
+        margin-block: 0;
+      }
+      .ned br {
+        line-height: var(--nb-rule);
+      }
+      .ned .mathx[data-d] {
+        display: block;
+        min-height: var(--nb-rule);
+        line-height: var(--nb-rule);
+        margin-block: 0;
       }
       .ned a {
         color: var(--acc);
@@ -5904,7 +5917,7 @@
 
       /* popup note (Adobe-style) */
       document.addEventListener("mousedown", (e) => {
-        if (act && !e.target.closest("#note")) closeNote();
+        if (act && !e.target.closest("#note") && !e.target.closest("#eqd")) closeNote();
       });
       function openNote(id, edit) {
         closeNote();
